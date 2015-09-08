@@ -44,31 +44,31 @@ struct 	s_pkx
   u8 	unused2[5];
 
   //Block B
-  u8 	nickname[26];
-  u16 	moves[4];
-  u8 	movePP[4];
-  u8 	movePPUps[4];
-  u16 	relearnMoves[4];
-  u8 	secretSuperTrainingFlag;
-  u8 	unused3;
-  u32 	individualValues;
+  u8 	nickname[26]; //26
+  u16 	moves[4]; //34
+  u8 	movePP[4]; //38
+  u8 	movePPUps[4]; //42
+  u16 	relearnMoves[4]; //50
+  u8 	secretSuperTrainingFlag; //51
+  u8 	unused3; //52
+  u32 	individualValues; //56
 
   //Block C
-  u8 	latestHandler[26];
-  u8 	handlerGender;
-  u8 	currentHandler;
-  u16 	geolocation[5];
-  u32	unused4;
+  u8 	latestHandler[26]; //26
+  u8 	handlerGender; //27
+  u8 	currentHandler; //28
+  u16 	geolocation[5]; //38
+  u32	unused4; //42
   u8 	handlerFriendship;
   u8 	handlerAffection;
   u8 	handlerMemoryIntensity;
   u8 	handlerMemoryLine;
   u8  	handlerMemoryFeel;
-  u8 	unused5;
-  u16 	handlerTextVar;
-  u32 	unused6;
-  u16 	fullness;
-  u16 	enjoyment;
+  u8 	unused5; //48
+  u16 	handlerTextVar; //50
+  u32 	unused6; //54
+  u8 	fullness; //56
+  u8	enjoyment;
 
   //Block D
   u8 	trainerName[26];
@@ -95,5 +95,6 @@ struct 	s_pkx
 };
 
 Result decryptPokemon(u8 *enc, u8 *dec);
+void 	pokemonDataDump(u8 *dec);
 
 #endif /* end of include guard: PKX_H */

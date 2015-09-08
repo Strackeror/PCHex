@@ -120,7 +120,6 @@ int 	main()
 
   waitKey(KEY_A);
   save = (u8 *) malloc(0xEB000);
-// Array.Copy(BitConverter.GetBytes((ushort)(BitConverter.ToUInt16(pkx, i) ^ (LCRNG(ref seed) >> 16))), 0, pkx, i, 2);
   ret = getFile(path, save);
 
   printf("press A to get box 1 slot 1 info \n");
@@ -129,13 +128,13 @@ int 	main()
 
   u8 *enc = (u8 *)malloc(232);
   u8 *dec = (u8 *)malloc(232);
-  printf("loading box 1 slot 1 at offset 0x38400\n");
+  printf("loading box 1 slot 1\n");
   getPokemon(0x33000 + 30 * 232, enc, save);
   printf("trying to decrypt...\n");
   decryptPokemon(enc, dec);
-  for (int i = 0x40; i < 0x58; i += 2)
-    printf("%c", dec[i]);
 
+  pokemonDataDump(dec);
+  printf("done press START to finish\n");
   waitKey(KEY_START); 
   free(save);
   free(enc);

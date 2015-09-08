@@ -50,3 +50,26 @@ Result decryptPokemon(u8 *enc, u8 *dec)
   shuffleArray(dec, sv);
   return (0);
 }
+
+void 	printPkName(u8 *str)
+{
+  for (int i = 0; i < 24; i += 2)
+    printf("%c", str[i]);
+}
+
+void 	pokemonDataDump(u8 *dec)
+{
+  struct s_pkx 	*pkx;
+
+  pkx = (struct s_pkx *)dec;
+  
+  printf("species no %d\n", pkx->species);
+  printf("Nickname : ");
+  printPkName(pkx->nickname);
+  printf("\nTrainer Name : ");
+  printPkName(pkx->trainerName);
+  printf("\n");
+
+  printf("EVs : %d %d %d %d %d %d\n", pkx->effortValues[HP], pkx->effortValues[ATK], pkx->effortValues[DEF],
+	pkx->effortValues[SPE], pkx->effortValues[SPA], pkx->effortValues[SPD]);
+}
