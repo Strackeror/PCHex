@@ -13,7 +13,7 @@ enum STAT
   SPD
 };
 
-struct 	s_pkx
+struct 	__attribute__((__packed__)) s_pkx
 {
   u32 	encryptKey;	
   u16 	sanity;
