@@ -20,28 +20,28 @@ struct 	s_pkx
   u16 	checksum;
 
   //Block A
-  u16 	species;
+  u16 	species; //0x8
   u16 	item;
   u16 	trainerID;
-  u16 	trainerSecretID;
-  u32 	expPoints;
+  u16 	trainerSecretID; //0xE
+  u32 	expPoints; //12
   u8 	ability;
-  u8 	abilityNum;	
+  u8 	abilityNum; //14	
   u16 	trainingBagHitsLeft;
-  u16 	personalityID;
+  u32 	personalityID;
   u8 	nature;
-  u8 	formFlags;
-  u8 	effortValues[6];
-  u8 	contestStats[6];
+  u8 	formFlags; //22
+  u8 	effortValues[6]; //28
+  u8 	contestStats[6]; //34
   u8 	markings;
   u8 	pokerus;
-  u32 	superTrainingFlags;
-  u8 	ribbonFlags[6];
-  u16 	unused1;
-  u8 	contestMemoryRibbon;
-  u8 	battleMemoryRibbon;
-  u8 	superTrainingDistributionFlags;
-  u8 	unused2[5];
+  u32 	superTrainingFlags; //40
+  u8 	ribbonFlags[6]; //46
+  u16 	unused1; //48
+  u8 	contestMemoryRibbon; //49
+  u8 	battleMemoryRibbon; //50
+  u8 	superTrainingDistributionFlags; //51
+  u8 	unused2[5]; //56
 
   //Block B
   u8 	nickname[26]; //26
@@ -67,8 +67,8 @@ struct 	s_pkx
   u8 	unused5; //48
   u16 	handlerTextVar; //50
   u32 	unused6; //54
-  u8 	fullness; //56
-  u8	enjoyment;
+  u8 	fullness; //55
+  u8	enjoyment; //56
 
   //Block D
   u8 	trainerName[26];

@@ -63,6 +63,7 @@ void 	pokemonDataDump(u8 *dec)
 
   pkx = (struct s_pkx *)dec;
   
+  printf("size test %d\n", (int) sizeof(struct s_pkx));
   printf("species no %d\n", pkx->species);
   printf("Nickname : ");
   printPkName(pkx->nickname);
