@@ -3,30 +3,27 @@
 #include <string.h>
 #include <3ds.h>
 
-extern "C"
+u32 __stacksize__ = 0x40000;
+
+void __appInit()
 {
-  u32 __stacksize__ = 0x40000;
-
-  void __appInit()
-  {
-    // Initialize services
-    srvInit();
-    aptInit();
-    gfxInit(GSP_RGB565_OES, GSP_RGB565_OES, false);
-    hidInit(NULL);
-    fsInit();
-  }
+  // Initialize services
+  srvInit();
+  aptInit();
+  gfxInit(GSP_RGB565_OES, GSP_RGB565_OES, false);
+  hidInit(NULL);
+  fsInit();
+}
 
 
-  void __appExit()
-  {
-    // Exit services
-    fsExit();
-    hidExit();
-    gfxExit();
-    aptExit();
-    srvExit();
-  }
+void __appExit()
+{
+  // Exit services
+  fsExit();
+  hidExit();
+  gfxExit();
+  aptExit();
+  srvExit();
 }
 
 Result loadFile(char* path, void* dst, FS_archive* archive, Handle* fsHandle, u64 maxSize)
