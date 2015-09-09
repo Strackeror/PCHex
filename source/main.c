@@ -84,6 +84,48 @@ Result 	getPokemon(u32 offset, u8 *enc, u8 *save)
   return (0);
 }
 
+int 	startLoop(u8 *save, u32 boxOffset, PrintConsole *top, PrintConsole *bot)
+{
+  u16 pkSlot = 0, oldPkSlot = 1;
+
+  u8 *enc = (u8 *)malloc(232);
+  u8 *dec = (u8 *)malloc(232);
+
+  u32 kPressed;
+
+  while (aptMainLoop())
+  {
+    hidScanInput();
+    kPressed = hidKeysDown();
+
+    if (oldPkSlot != pkSlot)
+    {
+      getPokemon(boxOffset + pkSlot * 232, enc, save);
+      decryptPokemon(enc, dec);
+      consoleClear();
+      printf("Dumping Pokemon on slot %d\n", pkSlot);
+      pokemonDataDump(dec);
+      oldPkSlot = pkSlot;
+    }
+
+    if (kPressed & KEY_LEFT)
+      if (pkSlot > 0)
+	pkSlot--;
+    if (kPressed & KEY_RIGHT)
+      if (pkSlot < 930)
+	pkSlot++;
+    if (kPressed & KEY_START)
+      break;
+    gfxFlushBuffers();
+    gfxSwapBuffers();
+    gspWaitForVBlank();
+  }
+  free(dec);
+  free(enc);
+  return 0;
+}
+
+
 void 	waitKey(u32 keyWait)
 {
  while (aptMainLoop())
@@ -103,12 +145,14 @@ int 	main()
 {
   char  path[] = "/main";
   u8 	*save = NULL;
+  PrintConsole 	top, bot;
  
   gfxInitDefault();
   fsInit();
-  consoleInit(GFX_TOP, NULL);
+  consoleInit(GFX_TOP, &top);
+  consoleInit(GFX_TOP, &bot);
 
-  printf("inited screen, press A to start\n");
+  printf("inited screen, press A to start file loading\n");
 
   waitKey(KEY_A);
 
@@ -130,25 +174,11 @@ int 	main()
   }
   else 
     printf("found no suitable save\n");
+  
+  printf("Left or Right to explore, START to exit\n\npress A to continue...");
+  waitKey(KEY_A);
   if (boxOffset)
-  {
-    printf("press A to get box 1 slot 1 info \n");
-
-    waitKey(KEY_A);
-
-    u8 *enc = (u8 *)malloc(232);
-    u8 *dec = (u8 *)malloc(232);
-    printf("loading box 1 slot 1\n");
-    getPokemon(boxOffset + 30 * 232, enc, save);
-    printf("trying to decrypt...\n");
-    decryptPokemon(enc, dec);
-
-    pokemonDataDump(dec);
-    free(enc);
-    free(dec);
-  }
-  printf("done press START to finish\n");
-  waitKey(KEY_START);
+    startLoop(save, boxOffset, &top, &bot);
   free(save);
   gfxExit();
   fsExit();
