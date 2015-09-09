@@ -71,15 +71,15 @@ struct 	__attribute__((__packed__)) s_pkx
   u8	enjoyment; //56
 
   //Block D
-  u8 	trainerName[26];
+  u8 	trainerName[26]; //26
   u8 	trainerFriendship;
   u8 	trainerAffection;
   u8 	trainerMemoryIntensity;
-  u8 	trainerMemoryLine;
+  u8 	trainerMemoryLine; //30
   u16 	trainerTextVar;
-  u8 	trainerMemoryFeel;
-  u32 	eggDate;
-  u32 	metDate;
+  u8 	trainerMemoryFeel; //33
+  u8 	eggDate[3];
+  u8	metDate[3];
   u8 	unused7;
   u16 	eggLocation;
   u16 	metLocation;

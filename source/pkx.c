@@ -64,20 +64,11 @@ void 	pokemonDataDump(u8 *dec)
 
   pkx = (struct s_pkx *)dec;
 
-  printf("Dumping Pokemon data :\n");
-  for (int i = 0; i < 232; i++)
-  {
-    if (i == 8 || !((i - 8) % 56))
-      printf("\n\n");
-    printf("%02X", dec[i]);
-  }
-  printf("\nEnd of Dump\n\n");
   if (pkx->species == 0)
   {
     printf("slot is empty\n");
     return;
   }
-  printf("size test %d\n", (int) sizeof(struct s_pkx));
   printf("species no %d\n", pkx->species);
   printf("Nickname : ");
   printPkName(pkx->nickname);
