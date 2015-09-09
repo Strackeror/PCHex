@@ -10,14 +10,15 @@ Result 	shuffleArray(u8 *array, u8 sv)
   u8 bloc[] = { 1, 1, 2, 3, 2, 3, 0, 0, 0, 0, 0, 0, 2, 3, 1, 1, 3, 2, 2, 3, 1, 1, 3, 2 };
   u8 cloc[] = { 2, 3, 1, 1, 3, 2, 2, 3, 1, 1, 3, 2, 0, 0, 0, 0, 0, 0, 3, 2, 3, 2, 1, 1 };
   u8 dloc[] = { 3, 2, 3, 2, 1, 1, 3, 2, 3, 2, 1, 1, 3, 2, 3, 2, 1, 1, 0, 0, 0, 0, 0, 0 };
-  printf("locations loaded\n");
 
   u8 ord[] = {aloc[sv], bloc[sv], cloc[sv], dloc[sv]};
+  u8 pkmcpy[232];
   u8 tmp[56];
-  printf("locations found\n");
+
+  memcpy(pkmcpy, array, 232);
   for (int b = 0; b < 4; b++)
   {
-    memcpy(tmp, array + 8 + 56 * ord[b], 56);
+    memcpy(tmp, pkmcpy + 8 + 56 * ord[b], 56);
     memcpy(array + 8 + 56 * b, tmp, 56);
   }
   return 0;	
@@ -62,7 +63,20 @@ void 	pokemonDataDump(u8 *dec)
   struct s_pkx 	*pkx;
 
   pkx = (struct s_pkx *)dec;
-  
+
+  printf("Dumping Pokemon data :\n");
+  for (int i = 0; i < 232; i++)
+  {
+    if (i == 8 || !((i - 8) % 56))
+      printf("\n\n");
+    printf("%02X", dec[i]);
+  }
+  printf("\nEnd of Dump\n\n");
+  if (pkx->species == 0)
+  {
+    printf("slot is empty\n");
+    return;
+  }
   printf("size test %d\n", (int) sizeof(struct s_pkx));
   printf("species no %d\n", pkx->species);
   printf("Nickname : ");
@@ -73,4 +87,5 @@ void 	pokemonDataDump(u8 *dec)
 
   printf("EVs : %d %d %d %d %d %d\n", pkx->effortValues[HP], pkx->effortValues[ATK], pkx->effortValues[DEF],
 	pkx->effortValues[SPE], pkx->effortValues[SPA], pkx->effortValues[SPD]);
+  
 }
