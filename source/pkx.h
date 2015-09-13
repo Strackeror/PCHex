@@ -13,6 +13,20 @@ enum STAT
   SPD
 };
 
+struct s_data
+{
+  u8 	pkmData[722][14];
+  u8	abilities[192][15];
+  u8 	moves[621][17];
+  u8 	species[721][12];
+} pkData;
+
+struct s_pkxcalc
+{
+  u8	level;
+  u16 	finalStats[6];
+};
+
 struct 	__attribute__((__packed__)) s_pkx
 {
   u32 	encryptKey;	
@@ -95,6 +109,12 @@ struct 	__attribute__((__packed__)) s_pkx
 };
 
 Result decryptPokemon(u8 *enc, u8 *dec);
+u8 	getPkmIV(u32 individualValues, u8 stat);
 void 	pokemonDataDump(u8 *dec);
+void 	printPkmName(u8 *str);
+u8 	getPkmLevel(u16 species, u32 exp);
+u16 	getPkmStat(u16 species, u8 IV, u8 EV, u8 nature, u8 level, u8 stat);
+
+int 	startLoop(u8 *, u32, PrintConsole *, PrintConsole *);
 
 #endif /* end of include guard: PKX_H */

@@ -5,6 +5,7 @@
 
 #include "pkx.h"
 
+
 Result _srvGetServiceHandle(Handle* out, const char* name)
 {
   Result rc = 0;
@@ -41,7 +42,7 @@ Result loadFile(char* path, void* dst, FS_archive* archive, Handle* fsHandle, u6
     ret=FSFILE_Read(fileHandle, bytesRead, 0x0, dst, size);
     if(ret!=0)goto loadFileExit;
     if(*bytesRead<size){ret=-3; goto loadFileExit;}
-    printf("file read : size %d \n", *bytesRead);
+    printf("file read : size %lu \n", *bytesRead);
     loadFileExit:
     FSFILE_Close(fileHandle);
     return ret;
@@ -50,6 +51,7 @@ Result loadFile(char* path, void* dst, FS_archive* archive, Handle* fsHandle, u6
 Result 	getFile(char *path, u8 *save, u32 *bytesRead)
 {
   if (save <= 0)
+
     return -1;
   Handle saveGameHandle;
   Result ret;
@@ -71,60 +73,21 @@ Result 	getFile(char *path, u8 *save, u32 *bytesRead)
   return 0;
 }
 
-Result 	getPokemon(u32 offset, u8 *enc, u8 *save)
+
+
+s8 	loadData(Handle *sdHandle, FS_archive *sdArchive)
 {
-  printf("array test %d : ", offset);
-  printf("%d\n", save[offset]);
-  printf("copying...");
-  for (int i = 0; i < 232; i++)
-  {
-    enc[i] = save[i + offset];
-  }
+  u8	tmp[12000];
+  u32 	bytesRead;
+  Result ret;
+
+  printf("loading specie data...");
+  ret = loadFile("/3ds/PCHex/data/personal", tmp, sdArchive, sdHandle, 12000, &bytesRead); 
+  if (ret) { printf("loading failed : error code %ld\n", ret); return ret; }
+  memcpy(pkData.pkmData, tmp, bytesRead);
   printf(" OK\n");
-  return (0);
-}
-
-int 	startLoop(u8 *save, u32 boxOffset, PrintConsole *top, PrintConsole *bot)
-{
-  u16 pkSlot = 0, oldPkSlot = 1;
-
-  u8 *enc = (u8 *)malloc(232);
-  u8 *dec = (u8 *)malloc(232);
-
-  u32 kPressed;
-
-  while (aptMainLoop())
-  {
-    hidScanInput();
-    kPressed = hidKeysDown();
-
-    if (oldPkSlot != pkSlot)
-    {
-      getPokemon(boxOffset + pkSlot * 232, enc, save);
-      decryptPokemon(enc, dec);
-      consoleClear();
-      printf("Dumping Pokemon on slot %d\n", pkSlot);
-      pokemonDataDump(dec);
-      oldPkSlot = pkSlot;
-    }
-
-    if (kPressed & KEY_LEFT)
-      if (pkSlot > 0)
-	pkSlot--;
-    if (kPressed & KEY_RIGHT)
-      if (pkSlot < 930)
-	pkSlot++;
-    if (kPressed & KEY_START)
-      break;
-    gfxFlushBuffers();
-    gfxSwapBuffers();
-    gspWaitForVBlank();
-  }
-  free(dec);
-  free(enc);
   return 0;
 }
-
 
 void 	waitKey(u32 keyWait)
 {
@@ -146,14 +109,25 @@ int 	main()
   char  path[] = "/main";
   u8 	*save = NULL;
   PrintConsole 	top, bot;
+  Handle sdHandle;
+  FS_archive sdArchive;
+  
  
   gfxInitDefault();
   fsInit();
+
+  srvGetServiceHandle(&sdHandle, "fs:USER");
+  sdArchive = (FS_archive){0x00000009, (FS_path){PATH_EMPTY, 1, (u8*)""}, 0, 0};
+  FSUSER_OpenArchive(&sdHandle, &sdArchive);
+
+  consoleInit(GFX_BOTTOM, &bot);
   consoleInit(GFX_TOP, &top);
-  consoleInit(GFX_TOP, &bot);
 
   printf("inited screen, press A to start file loading\n");
+  
+  loadData(&sdHandle, &sdArchive);
 
+  printf("test top x:%d y:%d  bot x:%d y:%d\n", top.consoleWidth, top.consoleHeight, bot.consoleWidth, bot.consoleHeight);
   waitKey(KEY_A);
 
   u32 bytesRead;
@@ -174,11 +148,11 @@ int 	main()
   }
   else 
     printf("found no suitable save\n");
-  
-  printf("Left or Right to explore, START to exit\n\npress A to continue...");
-  waitKey(KEY_A);
   if (boxOffset)
     startLoop(save, boxOffset, &top, &bot);
+
+  FSUSER_CloseArchive(&sdHandle, &sdArchive);
+  svcCloseHandle(sdHandle);
   free(save);
   gfxExit();
   fsExit();
