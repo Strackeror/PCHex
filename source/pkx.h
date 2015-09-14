@@ -17,8 +17,9 @@ struct s_data
 {
   u8 	pkmData[722][14];
   u8	abilities[192][15];
-  u8 	moves[621][17];
-  u8 	species[721][12];
+  u8 	moves[622][17];
+  u8 	species[722][12];
+  u8 	items[775][17];
 } pkData;
 
 struct s_pkxcalc
