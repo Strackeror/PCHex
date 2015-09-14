@@ -136,9 +136,9 @@ u16 	getPkmStat(u16 species, u8 IV, u8 EV, u8 nature, u8 level, u8 stat)
   u16 	final;
 
   if (stat == HP)
-    final = (10 + (2 * baseStat) + IV + EV / 4 + 100) * level / 100;
+    final = 10 + ((2 * baseStat) + IV + EV / 4 + 100) * level / 100;
   else if (stat <= SPD)
-    final = (5 + 2 * baseStat + IV + EV / 4) * level / 100; 
+    final = 5 + (2 * baseStat + IV + EV / 4) * level / 100; 
   else
     final = 0;
 

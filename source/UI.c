@@ -18,7 +18,7 @@ int 	printPKMScreen(struct s_pkx *pkx, PrintConsole *top, PrintConsole *bot, u16
 
   //species
   printf("\x1B[37;40m"); //White on Black
-  printf("DEX No. %3d\n", pkx->species);
+  printf("DEX No. %3d : %12s\n", pkx->species, pkData.species[pkx->species]);
   printf("Box %2d  Slot %2d\n", pkSlot / 30 + 1, pkSlot % 30 + 1);
   printf("\n");
 
@@ -37,7 +37,7 @@ int 	printPKMScreen(struct s_pkx *pkx, PrintConsole *top, PrintConsole *bot, u16
   //Trainers
   printf("OT : ");
   printPkmName(pkx->trainerName);
-  printf("  ID:%05d SID:%05d\n", pkx->trainerID, pkx->trainerSecretID);
+  printf("  ID:%5d SID:%05d\n", pkx->trainerID, pkx->trainerSecretID);
   printf("Current Trainer  : ");
   printPkmName(pkx->latestHandler);
   printf("\n");
@@ -46,12 +46,12 @@ int 	printPKMScreen(struct s_pkx *pkx, PrintConsole *top, PrintConsole *bot, u16
 
   //Moves
   for(int i = 0; i < 4; i++)
-    printf("Move %d: %24d\n   PP:%2d PPups:%1d\n", i + 1, pkx->moves[i], pkx->movePP[i], pkx->movePPUps[i]);
+    printf("Move %d: %16s\n   PP:%2d PPups:%1d\n", i + 1, pkData.moves[pkx->moves[i]], pkx->movePP[i], pkx->movePPUps[i]);
 
   printf("\n");
 
   //Abilities
-  printf("Ability : %24d (%d)\n", pkx->ability, pkx->abilityNum);
+  printf("Ability : %14s (%d)\n", pkData.abilities[pkx->ability], pkx->abilityNum);
   consoleSelect(top);
   return 0;
 }
