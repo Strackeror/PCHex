@@ -117,6 +117,21 @@ u8 	getPkmLevel(u16 species, u32 exp)
   return iterLevel;
 }
 
+s8 	setPkmLevel(struct s_pkm *pkm, u8 level)
+{
+  u8	xpType = pkData.pkmData[pkm->pkx.species][11];
+
+  if (level < 1 || level > 100)
+    return -1;
+  pkm->pkx.expPoints = expTable[level - 1][xpType];
+  return 0;
+}
+
+s8 	setPkmSpecies(struct s_pkm *pkm, u16 species)
+{
+  return -1;
+}
+
 void 	printPkmName(u8 *str)
 {
   for (int i = 0; i < 24; i += 2)

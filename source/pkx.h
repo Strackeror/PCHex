@@ -109,13 +109,50 @@ struct 	__attribute__((__packed__)) s_pkx
   u32 	unused8;
 };
 
-Result decryptPokemon(u8 *enc, u8 *dec);
+struct s_pkm
+{
+  struct s_pkx pkx;
+  struct s_pkxcalc calc;
+};
+
+struct s_stateInfo;
+
+struct s_UIState
+{
+  void (*initf)(struct s_stateInfo *);
+  void (*dispf)(struct s_stateInfo *);
+  void (*inputf)(struct s_stateInfo *);
+};
+
+struct s_stateInfo
+{
+  struct s_UIState curState;
+  u32 	kPressed;
+  u8 	inState;
+  s16 	pkmSlot;
+  u8 	game;
+  u8 	*save;
+  PrintConsole *console[2];
+  u8 	cont;
+  struct s_pkm pkm;
+};
+
+typedef struct s_stateInfo t_stinf;
+
+extern struct s_UIState pkmSelectState;
+extern struct s_UIState pkmGeneralState;
+
+Result  decryptPokemon(u8 *enc, u8 *dec);
 u8 	getPkmIV(u32 individualValues, u8 stat);
 void 	pokemonDataDump(u8 *dec);
 void 	printPkmName(u8 *str);
 u8 	getPkmLevel(u16 species, u32 exp);
+s8 	setPkmLevel(struct s_pkm *, u8 level);
 u16 	getPkmStat(u16 species, u8 IV, u8 EV, u8 nature, u8 level, u8 stat);
 
-int 	startLoop(u8 *, u32, PrintConsole *, PrintConsole *);
+s8 	loadPokemon(t_stinf * state, u16 slot, u8 *dest);
+s8 	switchState(t_stinf *state, struct s_UIState newst);
+int 	startLoop(u8 *, u8, PrintConsole *, PrintConsole *);
+
 
 #endif /* end of include guard: PKX_H */
