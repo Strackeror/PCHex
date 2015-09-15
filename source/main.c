@@ -197,12 +197,9 @@ s32 	rewriteSaveCHK(u8 *save, u8 game)
     return -1;
   for (int i = 0; i < blockCount; i++)
   {
-    printf("block :");
-    printf("block %d : %lu, %lu\n", i, getCHKOffset(game, 0, i), getCHKOffset(game, 1, i));
     memcpy(tmp, save + getCHKOffset(game, 0, i), getCHKOffset(game, 1, i));
     cs = ccitt16(tmp, getCHKOffset(game, 1, i));
     memcpy(save + csoff + i * 8, &cs, 2);
-    printf("cs block %d done\n", i);
   }
   free(tmp);
   return (0);
