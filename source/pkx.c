@@ -124,6 +124,7 @@ s8 	setPkmLevel(struct s_pkm *pkm, u8 level)
   if (level < 1 || level > 100)
     return -1;
   pkm->pkx.expPoints = expTable[level - 1][xpType];
+  pkmRecalc(pkm);
   return 0;
 }
 
@@ -163,6 +164,15 @@ u16 	getPkmStat(u16 species, u8 IV, u8 EV, u8 nature, u8 level, u8 stat)
     mult--;
   final = final * mult / 10;
   return final;
+}
+
+s8 	pkmRecalc(struct s_pkm *pkm)
+{
+  pkm->calc.level = getPkmLevel(pkm->pkx.species, pkm->pkx.expPoints);
+  for (int i = 0; i < 6; i++)
+    pkm->calc.finalStats[i] = getPkmStat(pkm->pkx.species, getPkmIV(pkm->pkx.individualValues, i), 
+					pkm->pkx.effortValues[i], pkm->pkx.nature, pkm->calc.level, i);
+  return 0;
 }
 
 Result 	shuffleArray(u8 *array, u8 sv)
@@ -211,4 +221,25 @@ Result decryptPokemon(u8 *enc, u8 *dec)
   }
   shuffleArray(dec, sv);
   return (0);
+}
+
+Result 	encryptPokemon(u8 *dec, u8 *enc)
+{
+  u32 	pv = *(u32 *)dec;
+  u32 	sv = (((pv & 0x3E000) >> 0xD) % 24);
+  u16 	tmp;
+
+  memcpy(enc, dec, 232);
+  for (int i = 0; i < 11; i++)
+    shuffleArray(enc, sv);
+
+  u32 	seed = pv;
+  for (int i = 8; i < 232; i += 2)
+  {
+    memcpy(&tmp, enc + i, 2);
+    tmp ^= (seedStep(seed) >> 16);
+    seed = seedStep(seed);
+    memcpy(enc + i, &tmp, 2);
+  }
+  return 0;
 }

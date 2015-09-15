@@ -133,7 +133,7 @@ struct s_stateInfo
   u8 	game;
   u8 	*save;
   PrintConsole *console[2];
-  u8 	cont;
+  s8 	cont;
   struct s_pkm pkm;
 };
 
@@ -143,16 +143,19 @@ extern struct s_UIState pkmSelectState;
 extern struct s_UIState pkmGeneralState;
 
 Result  decryptPokemon(u8 *enc, u8 *dec);
+Result 	encryptPokemon(u8 *dec, u8 *enc);
 u8 	getPkmIV(u32 individualValues, u8 stat);
 void 	pokemonDataDump(u8 *dec);
 void 	printPkmName(u8 *str);
 u8 	getPkmLevel(u16 species, u32 exp);
 s8 	setPkmLevel(struct s_pkm *, u8 level);
 u16 	getPkmStat(u16 species, u8 IV, u8 EV, u8 nature, u8 level, u8 stat);
+s8 	pkmRecalc(struct s_pkm *);
 
-s8 	loadPokemon(t_stinf * state, u16 slot, u8 *dest);
-s8 	switchState(t_stinf *state, struct s_UIState newst);
-int 	startLoop(u8 *, u8, PrintConsole *, PrintConsole *);
+s32	loadPokemon(t_stinf *state, u16 slot, u8 *dest);
+s32	savePokemon(t_stinf *state, u16 slot, u8 *src);
+s32 	switchState(t_stinf *state, struct s_UIState newst);
+s32 	startLoop(u8 *, u8, PrintConsole *, PrintConsole *);
 
 
 #endif /* end of include guard: PKX_H */

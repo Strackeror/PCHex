@@ -8,6 +8,7 @@
 void 	reloadPokemon(t_stinf *state)
 {
   loadPokemon(state, state->pkmSlot, (u8 *) &state->pkm.pkx);
+  pkmRecalc(&state->pkm);
 }
 
 void 	pkmSelectInit(t_stinf *state)
@@ -49,6 +50,11 @@ void 	pkmSelectInput(t_stinf *state)
   if (kPressed & KEY_START)
   {
     state->cont = 0;
+    return;
+  }
+  if (kPressed & KEY_SELECT)
+  {
+    state->cont = -1;
     return;
   }
   if (kPressed & KEY_A)

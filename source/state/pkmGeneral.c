@@ -55,14 +55,38 @@ void 	pkmGeneralDisplay(t_stinf *state)
   selectColor(0);
 }
 
+void 	decSelect(t_stinf *state)
+{
+  switch(state->inState)
+  {
+    case 4:
+      setPkmLevel(&state->pkm, state->pkm.calc.level - 1);
+      break;
+    case 5:
+      if (state->pkm.pkx.trainerFriendship > 0)
+	state->pkm.pkx.trainerFriendship--;
+      break;
+    case 6:
+      if (state->pkm.pkx.handlerFriendship > 0)
+	state->pkm.pkx.handlerFriendship--;
+      break;
+  }
+}
+
 void 	incSelect(t_stinf *state)
 {
   switch(state->inState)
   {
-    case 1:
+    case 4:
       setPkmLevel(&state->pkm, state->pkm.calc.level + 1);
       break;
-    case 2:
+    case 5:
+      if (state->pkm.pkx.trainerFriendship < 0xFF)
+	state->pkm.pkx.trainerFriendship++;
+      break;
+    case 6:
+      if (state->pkm.pkx.handlerFriendship < 0xFF)
+	state->pkm.pkx.handlerFriendship++;
       break;
   }
 }
@@ -76,6 +100,8 @@ void 	pkmGeneralInput(t_stinf *state)
     switchState(state, pkmSelectState);
     return;
   }
+  if (kPressed & KEY_START)
+    savePokemon(state, state->pkmSlot, (u8 *)&state->pkm.pkx);
   if (kPressed & KEY_UP)
     if (state->inState > 0)
       state->inState--;
@@ -83,7 +109,9 @@ void 	pkmGeneralInput(t_stinf *state)
     if (state->inState < 6)
       state->inState++;
   if (kPressed & KEY_LEFT)
-    ;//
+    decSelect(state);//
+  if (kPressed & KEY_RIGHT)
+    incSelect(state);
 }
 
 struct s_UIState pkmGeneralState = {&pkmGeneralInit, &pkmGeneralDisplay, &pkmGeneralInput};

@@ -47,28 +47,49 @@ Result loadFile(char* path, void* dst, FS_archive* archive, Handle* fsHandle, u6
     return ret;
 }
 
-Result 	getFile(char *path, u8 *save, u32 *bytesRead)
+Result saveFile(char *path, void *src, u64 size, FS_archive *archive, Handle *fsHandle, u32 *bytesWritten)
 {
-  if (save <= 0)
+  if (!path || !src || !archive) return -1;
 
-    return -1;
-  Handle saveGameHandle;
   Result ret;
-  ret = _srvGetServiceHandle(&saveGameHandle, "fs:USER");
-  printf("loaded fs %x\n", (u16) ret);
+  Handle fileHandle;
+
+  ret = FSUSER_OpenFile(fsHandle, &fileHandle, *archive, FS_makePath(PATH_CHAR, path), FS_OPEN_WRITE | FS_OPEN_CREATE, 0);
   if (ret) return ret;
-  ret = FSUSER_Initialize(&saveGameHandle);
-  printf("init fs %x\n", (u16) ret);
+
+  ret = FSFILE_Write(fileHandle, bytesWritten, 0, src, size, 0);
+
+  FSFILE_Close(fileHandle);
+  return ret;
+}
+
+s32	filesysInit(Handle *sd, Handle *save, FS_archive *sdarch, FS_archive *savearch)
+{
+  Result ret;
+  ret = _srvGetServiceHandle(save, "fs:USER");
   if (ret) return ret;
-  FS_archive archive = (FS_archive){0x4, (FS_path){PATH_EMPTY, 1, (u8*)""}, 0, 0};
-  ret = FSUSER_OpenArchive(&saveGameHandle, &archive);
-  printf("loaded archive %x\n", (u16) ret);
+
+  ret = FSUSER_Initialize(save);
   if (ret) return ret;
-  ret = loadFile(path, save, &archive, &saveGameHandle, 0xEB000, bytesRead);
-  printf("loaded file %s %x\n", path, (u16) ret);
+
+  *savearch = (FS_archive){0x4, (FS_path){PATH_EMPTY, 1, (u8*)""}, 0, 0};
+  ret = FSUSER_OpenArchive(save, savearch);
   if (ret) return ret;
-  FSUSER_CloseArchive(&saveGameHandle, &archive);
-  svcCloseHandle(saveGameHandle);
+
+  ret = srvGetServiceHandle(sd, "fs:USER");
+  if (ret) return ret;
+
+  *sdarch = (FS_archive){0x00000009, (FS_path){PATH_EMPTY, 1, (u8*)""}, 0, 0};
+  ret = FSUSER_OpenArchive(sd, sdarch);
+  return ret;
+}
+
+s32 	filesysExit(Handle *sd, Handle *save, FS_archive *sdarch, FS_archive *savearch)
+{
+  FSUSER_CloseArchive(save, savearch);
+  FSUSER_CloseArchive(sd, sdarch);
+  svcCloseHandle(*save);
+  svcCloseHandle(*sd);
   return 0;
 }
 
@@ -132,6 +153,37 @@ s8 	loadData(Handle *sdHandle, FS_archive *sdArchive)
   return 0;
 }
 
+s8	getGame(u32 bytesRead)
+{
+  u8 game = -1;
+  if (bytesRead == 0x76000)
+  {
+    printf("found OR/AS save\n");
+    game = 1;
+  }
+  else if (bytesRead == 0x65600)
+  {
+    printf("found X/Y save\n");
+    game = 0;
+  }
+  else 
+    printf("found no suitable save\n");
+  return game;
+}
+
+s32 	exportSave(u8 *save, u32 bytesRead, Handle *sdHandle, FS_archive *sdArchive)
+{
+  char 	path[] = "/3ds/PCHex/main";
+  u32 	bytesWritten;
+  s32 	ret;
+
+  printf("Exporting save...");
+  ret = saveFile(path, save, bytesRead, sdArchive, sdHandle, &bytesWritten);
+  if (ret) return ret;
+  printf(" OK\n");
+  return 0;
+}
+
 void 	waitKey(u32 keyWait)
 {
  while (aptMainLoop())
@@ -152,52 +204,39 @@ int 	main()
   char  path[] = "/main";
   u8 	*save = NULL;
   PrintConsole 	top, bot;
-  Handle sdHandle;
-  FS_archive sdArchive;
-  
- 
+  Handle sdHandle, saveHandle;
+  FS_archive sdArchive, saveArchive;
+
   gfxInitDefault();
-  fsInit();
-
-  srvGetServiceHandle(&sdHandle, "fs:USER");
-  sdArchive = (FS_archive){0x00000009, (FS_path){PATH_EMPTY, 1, (u8*)""}, 0, 0};
-  FSUSER_OpenArchive(&sdHandle, &sdArchive);
-
   consoleInit(GFX_BOTTOM, &bot);
   consoleInit(GFX_TOP, &top);
 
-  printf("inited screen, press A to start file loading\n");
-  
+  printf("Init Filesystem...");
+  if (filesysInit(&sdHandle, &saveHandle, &sdArchive, &saveArchive))
+    printf(" Failed\n");
+  else
+    printf(" OK\n");
+
   loadData(&sdHandle, &sdArchive);
 
-  printf("test top x:%d y:%d  bot x:%d y:%d\n", top.consoleWidth, top.consoleHeight, bot.consoleWidth, bot.consoleHeight);
-  waitKey(KEY_A);
-
+  printf("Loading savefile...");
   u32 bytesRead;
   save = (u8 *) malloc(0xEB000);
-  getFile(path, save, &bytesRead);
+  loadFile(path, save, &saveArchive, &saveHandle, 0xEB000, &bytesRead);
+  printf(" OK, read %ld bytes\n", bytesRead);
 
-  u32 boxOffset = 0;
+  u8 game = getGame(bytesRead);
+  s32 ret = 0;
+  if (game >= 0)
+    ret = startLoop(save, game, &top, &bot);
+  if (ret)
+    exportSave(save, bytesRead, &sdHandle, &sdArchive);
 
-  if (bytesRead == 0x76000)
-  {
-    printf("found OR/AS save, offset is 0x33000\n");
-    boxOffset = 0x33000;
-  }
-  else if (bytesRead == 0x65600)
-  {
-    printf("found X/Y save, offset is 0x22600\n");
-    boxOffset = 0x22600;
-  }
-  else 
-    printf("found no suitable save\n");
-  if (boxOffset)
-    startLoop(save, boxOffset, &top, &bot);
 
-  FSUSER_CloseArchive(&sdHandle, &sdArchive);
-  svcCloseHandle(sdHandle);
+  printf("Program ended, press A to come back to HB menu\n");
+  waitKey(KEY_A);
   free(save);
   gfxExit();
-  fsExit();
+  filesysExit(&sdHandle, &saveHandle, &sdArchive, &saveArchive);
   return 0;
 }
