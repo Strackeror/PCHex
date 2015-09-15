@@ -142,6 +142,8 @@ typedef struct s_stateInfo t_stinf;
 extern struct s_UIState pkmSelectState;
 extern struct s_UIState pkmGeneralState;
 
+u32 	getCHKOffset(u8 game, u8 type, u8 index);
+
 Result  decryptPokemon(u8 *enc, u8 *dec);
 Result 	encryptPokemon(u8 *dec, u8 *enc);
 u8 	getPkmIV(u32 individualValues, u8 stat);

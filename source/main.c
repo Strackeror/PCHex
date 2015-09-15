@@ -171,6 +171,43 @@ s8	getGame(u32 bytesRead)
   return game;
 }
 
+u16 	ccitt16(u8 *data, u32 len)
+{
+  u16 	crc = 0xFFFF;
+  for (u32 i = 0; i < len; i++)
+  {
+    crc ^= (u16)data[i] << 8;
+    for (int j = 0; j < 8; j++)
+      if (crc & 0x8000)
+	crc = crc << 1 ^ 0x1021;
+      else
+	crc = crc << 1;
+  }
+  return crc;
+}
+
+s32 	rewriteSaveCHK(u8 *save, u8 game)
+{
+  u8 	blockCount = (game) ? 58 : 55;
+  u32 	csoff = (game ? 0x7B21A : 0x6A81A) - 0x5400;
+  u8 	*tmp = malloc(0x35000);
+  u16 	cs;
+
+  if (!tmp)
+    return -1;
+  for (int i = 0; i < blockCount; i++)
+  {
+    printf("block :");
+    printf("block %d : %lu, %lu\n", i, getCHKOffset(game, 0, i), getCHKOffset(game, 1, i));
+    memcpy(tmp, save + getCHKOffset(game, 0, i), getCHKOffset(game, 1, i));
+    cs = ccitt16(tmp, getCHKOffset(game, 1, i));
+    memcpy(save + csoff + i * 8, &cs, 2);
+    printf("cs block %d done\n", i);
+  }
+  free(tmp);
+  return (0);
+}
+
 s32 	exportSave(u8 *save, u32 bytesRead, Handle *sdHandle, FS_archive *sdArchive)
 {
   char 	path[] = "/3ds/PCHex/main";
@@ -178,6 +215,7 @@ s32 	exportSave(u8 *save, u32 bytesRead, Handle *sdHandle, FS_archive *sdArchive
   s32 	ret;
 
   printf("Exporting save...");
+  rewriteSaveCHK(save, bytesRead == 0x76000);
   ret = saveFile(path, save, bytesRead, sdArchive, sdHandle, &bytesWritten);
   if (ret) return ret;
   printf(" OK\n");
@@ -229,9 +267,9 @@ int 	main()
   s32 ret = 0;
   if (game >= 0)
     ret = startLoop(save, game, &top, &bot);
+  consoleSelect(&top);
   if (ret)
     exportSave(save, bytesRead, &sdHandle, &sdArchive);
-
 
   printf("Program ended, press A to come back to HB menu\n");
   waitKey(KEY_A);
