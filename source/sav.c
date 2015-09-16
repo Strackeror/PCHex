@@ -90,6 +90,7 @@ s32 	exportSave(u8 *save, u8 game, Handle *sdHandle, FS_archive *sdArchive)
   ret = saveFile(path, save, len, sdArchive, sdHandle, &bytesWritten);
   if (ret) return ret;
   printf(" OK\n");
+  printf("exported save to %s", path);
   return 0;
 }
 

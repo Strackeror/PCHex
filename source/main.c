@@ -94,14 +94,15 @@ int 	main()
 
   printf("Init Filesystem...");
   if (filesysInit(&sdHandle, &saveHandle, &sdArchive, &saveArchive))
-    printf(" Failed\n");
+  { printf(" Failed\n"); goto end;}
   else
     printf(" OK\n");
 
-  loadData(&sdHandle, &sdArchive);
+  if (loadData(&sdHandle, &sdArchive))
+    goto end;
 
   save = (u8 *) malloc(0xEB000);
-  u8 game = loadSave(save, &saveHandle, &saveArchive);
+  s8 game = loadSave(save, &saveHandle, &saveArchive);
   s32 ret = 0;
 
   if (game >= 0)
@@ -110,6 +111,7 @@ int 	main()
   if (ret)
     exportSave(save, game, &sdHandle, &sdArchive);
 
+  end:
   printf("Program ended, press A to come back to HB menu\n");
   waitKey(KEY_A);
   free(save);
