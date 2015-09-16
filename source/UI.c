@@ -4,7 +4,7 @@
 
 #include <3ds.h>
 
-#include "pkx.h"
+#include "pchex.h"
 
 s32	loadPokemon(t_stinf *state, u16 slot, u8 *dest)
 {

@@ -4,7 +4,7 @@
 
 #include <3ds.h>
 
-#include "../pkx.h"
+#include "../pchex.h"
 
 int 	selectColor(u8 sel)
 {
@@ -44,7 +44,7 @@ void 	pkmGeneralDisplay(t_stinf *state)
   printf("\n");
 
   selectColor(state->inState == 4);
-  printf("EXP : %-7ld\nLevel : %-3d\n\n", pkx->expPoints, state->pkm.calc.level);
+  printf("EXP : %-7ld\nLevel : %-3d\n\n", pkx->expPoints, state->pkm.level);
 
   selectColor(0);
   printf("Friendship :\n");
@@ -60,7 +60,7 @@ void 	decSelect(t_stinf *state)
   switch(state->inState)
   {
     case 4:
-      setPkmLevel(&state->pkm, state->pkm.calc.level - 1);
+      setPkmLevel(&state->pkm, state->pkm.level - 1);
       break;
     case 5:
       if (state->pkm.pkx.trainerFriendship > 0)
@@ -78,7 +78,7 @@ void 	incSelect(t_stinf *state)
   switch(state->inState)
   {
     case 4:
-      setPkmLevel(&state->pkm, state->pkm.calc.level + 1);
+      setPkmLevel(&state->pkm, state->pkm.level + 1);
       break;
     case 5:
       if (state->pkm.pkx.trainerFriendship < 0xFF)

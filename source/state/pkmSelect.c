@@ -3,7 +3,7 @@
 #include <string.h>
 #include <3ds.h>
 
-#include "../pkx.h"
+#include "../pchex.h"
 
 void 	reloadPokemon(t_stinf *state)
 {

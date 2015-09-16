@@ -13,15 +13,6 @@ enum STAT
   SPD
 };
 
-struct s_data
-{
-  u8 	pkmData[722][14];
-  u8	abilities[192][15];
-  u8 	moves[622][17];
-  u8 	species[722][12];
-  u8 	items[775][17];
-} pkData;
-
 struct s_pkxcalc
 {
   u8	level;
@@ -93,11 +84,11 @@ struct 	__attribute__((__packed__)) s_pkx
   u8 	trainerMemoryLine; //30
   u16 	trainerTextVar;
   u8 	trainerMemoryFeel; //33
-  u8 	eggDate[3];
-  u8	metDate[3];
+  u8 	eggDate[3]; //36
+  u8	metDate[3]; //39
   u8 	unused7;
   u16 	eggLocation;
-  u16 	metLocation;
+  u16 	metLocation; //44
   u8 	ballType;
   u8 	encounterLevel;
   u8 	encounterType;
@@ -105,59 +96,31 @@ struct 	__attribute__((__packed__)) s_pkx
   u8 	countryID;
   u8 	regionID;
   u8 	region3DSID;
-  u8 	languageID;
-  u32 	unused8;
+  u8 	languageID; //52
+  u32 	unused8; //56
 };
+
+struct s_data
+{
+  u8 	pkmData[722][14];
+  u8	abilities[192][15];
+  u8 	moves[622][17];
+  u8 	species[722][12];
+  u8 	items[775][17];
+} pkData;
 
 struct s_pkm
 {
-  struct s_pkx pkx;
-  struct s_pkxcalc calc;
+  struct s_pkx 	pkx;
+  u8		level;
+  u16		stat[6];
 };
 
-struct s_stateInfo;
-
-struct s_UIState
-{
-  void (*initf)(struct s_stateInfo *);
-  void (*dispf)(struct s_stateInfo *);
-  void (*inputf)(struct s_stateInfo *);
-};
-
-struct s_stateInfo
-{
-  struct s_UIState curState;
-  u32 	kPressed;
-  u8 	inState;
-  s16 	pkmSlot;
-  u8 	game;
-  u8 	*save;
-  PrintConsole *console[2];
-  s8 	cont;
-  struct s_pkm pkm;
-};
-
-typedef struct s_stateInfo t_stinf;
-
-extern struct s_UIState pkmSelectState;
-extern struct s_UIState pkmGeneralState;
-
-u32 	getCHKOffset(u8 game, u8 type, u8 index);
-
-Result  decryptPokemon(u8 *enc, u8 *dec);
-Result 	encryptPokemon(u8 *dec, u8 *enc);
+s32     decryptPokemon(u8 *enc, u8 *dec);
+s32    	encryptPokemon(u8 *dec, u8 *enc);
 u8 	getPkmIV(u32 individualValues, u8 stat);
-void 	pokemonDataDump(u8 *dec);
 void 	printPkmName(u8 *str);
-u8 	getPkmLevel(u16 species, u32 exp);
 s8 	setPkmLevel(struct s_pkm *, u8 level);
-u16 	getPkmStat(u16 species, u8 IV, u8 EV, u8 nature, u8 level, u8 stat);
 s8 	pkmRecalc(struct s_pkm *);
-
-s32	loadPokemon(t_stinf *state, u16 slot, u8 *dest);
-s32	savePokemon(t_stinf *state, u16 slot, u8 *src);
-s32 	switchState(t_stinf *state, struct s_UIState newst);
-s32 	startLoop(u8 *, u8, PrintConsole *, PrintConsole *);
-
 
 #endif /* end of include guard: PKX_H */
