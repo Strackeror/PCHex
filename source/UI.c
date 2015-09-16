@@ -53,6 +53,7 @@ s32 	startLoop(u8 *save, u8 game, PrintConsole *top, PrintConsole *bot)
   state.console[1] = bot;
   state.game = game;
   state.curState = pkmSelectState;
+  state.pkmSlot = 0;
   state.cont = 1;
   state.inState = 1;
   state.curState.initf(&state);

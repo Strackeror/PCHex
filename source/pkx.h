@@ -60,7 +60,7 @@ struct 	__attribute__((__packed__)) s_pkx
   u32 	individualValues; //56
 
   //Block C
-  u8 	latestHandler[26]; //26
+  u8 	handlerName[26]; //26
   u8 	handlerGender; //27
   u8 	currentHandler; //28
   u16 	geolocation[5]; //38
@@ -92,7 +92,7 @@ struct 	__attribute__((__packed__)) s_pkx
   u8 	ballType;
   u8 	encounterLevel;
   u8 	encounterType;
-  u8 	trainerGameID;
+  u8 	gameID;
   u8 	countryID;
   u8 	regionID;
   u8 	region3DSID;
@@ -119,8 +119,12 @@ struct s_pkm
 s32     decryptPokemon(u8 *enc, u8 *dec);
 s32    	encryptPokemon(u8 *dec, u8 *enc);
 u8 	getPkmIV(u32 individualValues, u8 stat);
-void 	printPkmName(u8 *str);
 s8 	setPkmLevel(struct s_pkm *, u8 level);
 s8 	pkmRecalc(struct s_pkm *);
+
+s8	setNickname(char *src, struct s_pkm *pkm);
+char 	*getNickname(char *dst, struct s_pkm *pkm);
+char 	*getOTName(char *dst, struct s_pkm *pkm);
+char 	*getHdlName(char *dst, struct s_pkm *pkm);
 
 #endif /* end of include guard: PKX_H */

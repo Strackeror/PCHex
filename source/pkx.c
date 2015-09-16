@@ -133,11 +133,56 @@ s8 	setPkmSpecies(struct s_pkm *pkm, u16 species)
   return -1;
 }
 
-void 	printPkmName(u8 *str)
+s8	setu16Name(char *src, u8 *dest)
 {
-  for (int i = 0; i < 24; i += 2)
-    if (str[i]) printf("%c", str[i]);
-    else printf(" ");
+  int	cnt = 0;
+
+  while (src[cnt] && cnt < 12)
+  {
+    dest[cnt * 2] = src[cnt];
+    dest[cnt * 2 + 1] = 0;
+    cnt++;
+  }
+  while (cnt <= 12)
+  {
+    dest[cnt * 2] = 0;
+    dest[cnt * 2 + 1] = 0;
+    cnt++;
+  }
+  return 0;
+}
+
+s8	setNickname(char *src, struct s_pkm *pkm)
+{
+  return setu16Name(src, pkm->pkx.nickname);
+}
+
+char 	*getu16Name(char *dst, u8 *src)
+{
+  int 	cnt = 0;
+
+  while (src[cnt] && cnt < 24)
+  {
+    dst[cnt / 2] = src[cnt];
+    cnt += 2;
+  }
+  dst[cnt / 2] = 0;
+  return dst;
+}
+
+char 	*getNickname(char *dst, struct s_pkm *pkm)
+{
+  return getu16Name(dst, pkm->pkx.nickname);
+}
+
+char 	*getOTName(char *dst, struct s_pkm *pkm)
+{
+  return (getu16Name(dst, pkm->pkx.trainerName));
+}
+
+char 	*getHdlName(char *dst, struct s_pkm *pkm)
+{
+  return (getu16Name(dst, pkm->pkx.handlerName));
 }
 
 u8 	getPkmIV(u32 individualValues, u8 stat)

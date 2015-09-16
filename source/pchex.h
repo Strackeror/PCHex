@@ -15,15 +15,19 @@ struct s_UIState
 
 struct s_stateInfo
 {
-  struct s_UIState curState;
-  u32 	kPressed;
-  u8 	inState;
-  s16 	pkmSlot;
-  u8 	game;
-  u8 	*save;
-  PrintConsole *console[2];
-  s8 	cont;
-  struct s_pkm pkm;
+  u32 			kPressed;
+  PrintConsole 		*console[2];
+
+  struct s_pkm 		pkm;
+  s16 			pkmSlot;
+  u8 			game;
+  u8 			*save;
+
+  struct s_UIState 	curState;
+  u8 			inState;
+  u8			inSel;
+  u8 			modded;
+  s8 			cont;
 };
 
 typedef struct s_stateInfo t_stinf;
