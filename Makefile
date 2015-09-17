@@ -33,6 +33,10 @@ SOURCES		:=	source source/state
 DATA		:=	data
 INCLUDES	:=	include
 
+APP_TITLE 	:= 	PCHex
+APP_DESCRIPTION := 	'A Gen6 save editor'
+APP_AUTHOR 	:= 	Stracker
+
 #---------------------------------------------------------------------------------
 # options for code generation
 #---------------------------------------------------------------------------------

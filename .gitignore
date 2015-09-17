@@ -4,3 +4,5 @@ build/
 .ycm*
 *.elf
 *.swp
+!export/PCHex/*.3dsx
+!export/PCHex/*.smdh
