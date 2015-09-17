@@ -24,7 +24,7 @@ struct s_stateInfo
   u8 			*save;
 
   struct s_UIState 	curState;
-  u8 			inState;
+  s8 			inState;
   u8			inSel;
   u8 			modded;
   s8 			cont;
@@ -37,6 +37,7 @@ extern struct s_UIState pkmGeneralState;
 
 s32     saveFile(char *path, void *src, u64 size, FS_archive *archive, Handle *fsHandle, u32 *bytesWritten);
 s32 	loadFile(char *path, void *dst, FS_archive *fsarch, Handle *fshdl, u64 maxSize, u32 *bytesRead);
+s32 	deleteFile(char *path, Handle *fshdl, FS_archive *fsarch);
 s32 	filesysInit(Handle *, Handle *, FS_archive *, FS_archive *);
 s32 	filesysExit(Handle *, Handle *, FS_archive *, FS_archive *);
 

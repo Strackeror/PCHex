@@ -39,7 +39,8 @@ void 	pkmSelectDisplay(t_stinf *state)
     printf("-");
   printf("DPad Left/Right : Previous/Next Slot\n");
   printf("DPad Up/Down    : Previous/Next Box\n");
-  printf("A : Select Slot     Start : Quit\n");
+  printf("A : Select Slot |   Start : Quit\n");
+  printf("Select : Export Save");
 }
 
 void 	pkmSelectInput(t_stinf *state)

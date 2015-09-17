@@ -86,11 +86,12 @@ s32 	exportSave(u8 *save, u8 game, Handle *sdHandle, FS_archive *sdArchive)
   s32 	ret;
 
   printf("Exporting save...");
+  deleteFile(path, sdHandle, sdArchive);
   rewriteSaveCHK(save, game);
   ret = saveFile(path, save, len, sdArchive, sdHandle, &bytesWritten);
   if (ret) return ret;
   printf(" OK\n");
-  printf("exported save to %s", path);
+  printf("exported save to %s\n", path);
   return 0;
 }
 

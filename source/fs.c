@@ -60,6 +60,16 @@ Result saveFile(char *path, void *src, u64 size, FS_archive *archive, Handle *fs
   return ret;
 }
 
+s32 	deleteFile(char *path, Handle *fsHandle, FS_archive *fsarch)
+{
+  s32 	ret;
+
+  if (!path || !fsarch || !fsHandle)
+    return -1;
+  ret = FSUSER_DeleteFile(fsHandle, *fsarch, FS_makePath(PATH_CHAR, path));
+  return ret;
+}
+
 s32	filesysInit(Handle *sd, Handle *save, FS_archive *sdarch, FS_archive *savearch)
 {
   Result ret;

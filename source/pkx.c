@@ -1,4 +1,5 @@
 #include <3ds.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -133,6 +134,72 @@ s8 	setPkmSpecies(struct s_pkm *pkm, u16 species)
   return -1;
 }
 
+s8 	rerollPID(struct s_pkm *pkm)
+{
+  pkm->pkx.personalityID = rand();
+  pkmRecalc(pkm);
+  return 0;
+}
+
+s8	rerollPIDGender(struct s_pkm *pkm, u8 gender)
+{
+  u8	gratio = pkData.pkmData[pkm->pkx.species][0xA];
+  u8 	pid = rand();
+
+  if (gratio == 255)
+  {
+    pkm->pkx.personalityID = pid;
+    pkmRecalc(pkm);
+    return 0;
+  }
+  if (gratio == 254)
+    gratio++;
+  for (;;)
+  {
+    u32 gv = (pid & 0xFF);
+    if (gender == 2)
+      break;
+    if ((gender == 1) && gv <= gratio)
+      break;
+    if ((gender == 0) && gv > gratio)
+      break;
+    pid = rand();
+  }
+  pkm->pkx.personalityID = pid;
+  pkmRecalc(pkm);
+  return 0;
+}
+
+s8 	rerollPIDShiny(struct s_pkm *pkm)
+{
+  while (!pkm->isShiny)
+    rerollPID(pkm);
+  return 0;
+}
+
+s8	isShiny(struct s_pkm *pkm)
+{
+  u16 trainerSV = (pkm->pkx.trainerID ^ pkm->pkx.trainerSecretID) >> 4;
+  u16 pkmSV = ((pkm->pkx.personalityID >> 16) ^ (pkm->pkx.personalityID & 0xFFFF)) >> 4;
+
+  return (pkmSV == trainerSV);
+}
+
+s8	getGender(struct s_pkm *pkm)
+{
+  u8	gratio = pkData.pkmData[pkm->pkx.species][0xA];
+
+  if (gratio == 255)
+    return 2;
+  if (gratio == 254)
+    gratio++;
+
+  if ((pkm->pkx.personalityID & 0xFF) <= gratio)
+    return 1;
+  else
+    return 0;
+}
+
 s8	setu16Name(char *src, u8 *dest)
 {
   int	cnt = 0;
@@ -217,6 +284,8 @@ s8 	pkmRecalc(struct s_pkm *pkm)
   for (int i = 0; i < 6; i++)
     pkm->stat[i] = calcPkmStat(pkm->pkx.species, getPkmIV(pkm->pkx.individualValues, i),
 			      pkm->pkx.effortValues[i], pkm->pkx.nature, pkm->level, i);
+  pkm->isShiny = isShiny(pkm);
+  pkm->gender = getGender(pkm);
   return 0;
 }
 

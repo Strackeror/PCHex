@@ -92,6 +92,8 @@ int 	main()
   consoleInit(GFX_BOTTOM, &bot);
   consoleInit(GFX_TOP, &top);
 
+  srand(svcGetSystemTick());
+
   printf("Init Filesystem...");
   if (filesysInit(&sdHandle, &saveHandle, &sdArchive, &saveArchive))
   { printf(" Failed\n"); goto end;}

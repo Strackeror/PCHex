@@ -5,17 +5,27 @@
 #include <3ds.h>
 
 #include "../pchex.h"
+#include "state.h"
 
-char helpstrings[10][3][50] = {
+char helpstrings[20][3][50] = {
   { "Up/Down/Left/Right : Choose field",
-    "A : Select field | Start : Save",
-    "Select : Back" },
+    "A : Select field ",
+    "Select : Save  | Start : Back" },
   {"","","B : Leave field"},
-  { "",
-    "X : Set Species as Nickname",
-    "B : Leave field" },
+  { "", "X : Set Species as Nickname", "B : Leave field" },
+  {"X : Reroll","Y : Shinify","B : Leave field"},
+  {"","Up/Down : Add/Substract a level","B : Leave field"},
   {"","","B : Leave field"},
-  {"","Up/Down : Add/Substract a level","B : Leave field"}
+  {"","","B : Leave field"},
+  {"","Up/Down/Left/Right : Modify value","B : Leave field"},
+  {"","Up/Down/Left/Right : Modify value","B : Leave field"},
+  {"","","B : Leave field"},
+  {"","","B : Leave field"},
+  {"","","B : Leave field"},
+  {"","","B : Leave field"},
+  {"","","B : Leave field"},
+  {"","","B : Leave field"},
+  {"","","B : Leave field"},
 };
 
 void 	resetColor()
@@ -39,7 +49,7 @@ void 	pkmGeneralInit(t_stinf *state)
 {
   state->inState = 1;
   state->inSel = 0;
-  state->modded = 1;
+  state->modded = 0;
   consoleClear();
 }
 
@@ -56,6 +66,62 @@ void 	pkmGeneralHelp(t_stinf *state)
   printf("%-40s", helpstrings[sel][2]);
 }
 
+void 	pkmGeneralTrainerDisplay(t_stinf *state)
+{
+  struct s_pkx *pkx = &state->pkm.pkx;
+  u8	ist = state->inState, sel = state->inSel;
+  char 	tmp[50];
+
+  selectColor(5, ist, sel);
+  printf("OT:%-12s", getOTName(tmp, &state->pkm));
+  resetColor(); printf("     ");
+  selectColor(6, ist, sel);
+  printf("Handler:%-12s", getHdlName(tmp, &state->pkm));
+
+  selectColor(7, ist, sel);
+  printf("Friendship:%-3d", pkx->trainerFriendship);
+  resetColor(); printf("%-6s", "");
+  selectColor(8, ist, sel);
+  printf("Friendship:%-3d\n", pkx->handlerFriendship);
+
+  selectColor(9, ist, sel);
+  printf("ID :%05d\n", pkx->trainerID);
+
+  selectColor(10, ist, sel);
+  printf("SID:%05d\n", pkx->trainerSecretID);
+
+  printf("\n");
+}
+
+void 	pkmGeneralOrigDisplay(t_stinf *state)
+{
+  struct s_pkx *pkx = &state->pkm.pkx;
+  u8	ist = state->inState, sel = state->inSel;
+
+  selectColor(11, ist, sel);
+  printf("Met Location ID: %-5d\n", pkx->metLocation);
+  
+  selectColor(12, ist, sel);
+  printf("Met Date: %02d/%02d/%04d\n", pkx->metDate[1], pkx->metDate[2], 2000 + pkx->metDate[0]);
+
+  selectColor(13, ist, sel);
+  printf("Original Game ID: %-3d\n", pkx->gameID);
+
+  printf("\n");
+}
+
+void 	pkmGeneralItemDisplay(t_stinf *state)
+{
+  struct s_pkx *pkx = &state->pkm.pkx;
+  u8	ist = state->inState, sel = state->inSel;
+
+  selectColor(14, ist, sel);
+  printf("Held Item:%-16s\n", pkData.items[pkx->item]);
+
+  selectColor(15, ist, sel);
+  printf("Pokeball:%-16s\n", pkData.items[pkx->ballType]);
+}
+
 void 	pkmGeneralDisplay(t_stinf *state)
 {
   struct s_pkx *pkx = &state->pkm.pkx;
@@ -65,7 +131,8 @@ void 	pkmGeneralDisplay(t_stinf *state)
   printf("\x1B[0;0H");
   printf("General\n\n");
   printf("Box %-2d Slot %-2d\n", state->pkmSlot / 30 + 1, state->pkmSlot % 30 + 1);
-  
+  if (state->modded) printf("\x1B[31mModified\x1B[0m");
+  else printf("%-8s", "");
   printf("\n");
 
   selectColor(1, ist, sel);
@@ -76,108 +143,41 @@ void 	pkmGeneralDisplay(t_stinf *state)
   printf("\n");
 
   selectColor(3, ist, sel);
-  printf("PID %8lx\n", pkx->personalityID);
+  printf("PID : %08lx\n", pkx->personalityID);
+  resetColor();
 
+  char	genderstr[3][8] = {"Male", "Female", "None"};
+  printf("Gender: %-8s\n", genderstr[state->pkm.gender]);
+  printf("Shiny : %-3s\n", state->pkm.isShiny ? "Yes" : "No");
   printf("\n");
 
   selectColor(4, ist, sel);
   printf("EXP : %-7ld\nLevel : %-3d\n\n", pkx->expPoints, state->pkm.level);
 
-  selectColor(5, ist, sel);
-  printf("OT:%-12s", getOTName(tmp, &state->pkm));
-  resetColor(); printf("     ");
-
-  selectColor(6, ist, sel);
-  printf("Handler:%-12s\n", getHdlName(tmp, &state->pkm));
+  pkmGeneralTrainerDisplay(state);
+  pkmGeneralOrigDisplay(state);
+  pkmGeneralItemDisplay(state);
 
   resetColor();
   printf("\x1B[26;0H");
   pkmGeneralHelp(state);
 }
 
-void 	pkmGenSpecies(t_stinf *state)
-{
-  u32 	kPressed = state->kPressed;
-  if (state->inSel)
-  {
-    if (kPressed & KEY_B) {state->inSel = 0; return;}
-  }
-  else
-  {
-    if (kPressed & KEY_A) {state->inSel = 1; return;}
-    if (kPressed & KEY_DOWN) state->inState++;
-  }
-}
-
-void 	pkmGenNickname(t_stinf *state)
-{
-  u32 	kPressed = state->kPressed;
-  if (state->inSel)
-  {
-    if (kPressed & KEY_B) {state->inSel = 0; return;}
-    if (kPressed & KEY_X) {setNickname((char *) pkData.species[state->pkm.pkx.species], &state->pkm);}
-  }
-  else
-  {
-    if (kPressed & KEY_A) {state->inSel = 1; return;}
-    if (kPressed & KEY_UP) state->inState--;
-    if (kPressed & KEY_DOWN) state->inState++;
-  }
-}
-
-void 	pkmGenPID(t_stinf *state)
-{
-  u32 	kPressed = state->kPressed;
-  if (state->inSel)
-  {
-    if (kPressed & KEY_B) {state->inSel = 0; return;}
-  }
-  else
-  {
-    if (kPressed & KEY_A) {state->inSel = 1; return;}
-    if (kPressed & KEY_UP) state->inState--;
-    if (kPressed & KEY_DOWN) state->inState++;
-  }
-}
-
-void 	pkmGenEXP(t_stinf *state)
-{
-  u32 	kPressed = state->kPressed;
-  if (state->inSel)
-  {
-    if (kPressed & KEY_B) {state->inSel = 0; return;}
-    s8 	addLevel = 0;
-    if (kPressed & KEY_UP)
-      addLevel += 1;
-    if (kPressed & KEY_DOWN)
-      addLevel -= 1;
-    setPkmLevel(&state->pkm, state->pkm.level + addLevel);
-  }
-  else
-  {
-    if (kPressed & KEY_A) {state->inSel = 1; return;}
-    if (kPressed & KEY_UP) state->inState--;
-    //if (kPressed & KEY_DOWN) state->inState++;
-  }
-}
-
 void 	pkmGeneralInput(t_stinf *state)
 {
   u32 	kPressed = state->kPressed;
 
-  if (kPressed & KEY_SELECT)
+  if (kPressed & KEY_START)
   {	
     switchState(state, pkmSelectState);
     return;
   }
-  if (kPressed & KEY_START)
+  if (kPressed & KEY_SELECT)
+  {
     savePokemon(state, state->pkmSlot, (u8 *)&state->pkm.pkx);
-  switch (state->inState){
-    case 1: pkmGenSpecies(state); break;
-    case 2: pkmGenNickname(state); break;
-    case 3: pkmGenPID(state); break;
-    case 4: pkmGenEXP(state); break;
+    state->modded = 0;
   }
+  pkmGenInputField(state);
 }
 
 struct s_UIState pkmGeneralState = {&pkmGeneralInit, &pkmGeneralDisplay, &pkmGeneralInput};

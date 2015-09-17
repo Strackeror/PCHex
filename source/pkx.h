@@ -114,6 +114,8 @@ struct s_pkm
   struct s_pkx 	pkx;
   u8		level;
   u16		stat[6];
+  u8 		isShiny;
+  u8 		gender;
 };
 
 s32     decryptPokemon(u8 *enc, u8 *dec);
@@ -121,6 +123,13 @@ s32    	encryptPokemon(u8 *dec, u8 *enc);
 u8 	getPkmIV(u32 individualValues, u8 stat);
 s8 	setPkmLevel(struct s_pkm *, u8 level);
 s8 	pkmRecalc(struct s_pkm *);
+
+s8 	rerollPID(struct s_pkm *);
+s8 	rerollPIDGender(struct s_pkm *pkm, u8 gender);
+s8 	rerollPIDShiny(struct s_pkm *);
+
+s8 	isShiny(struct s_pkm *);
+s8 	getGender(struct s_pkm *);
 
 s8	setNickname(char *src, struct s_pkm *pkm);
 char 	*getNickname(char *dst, struct s_pkm *pkm);

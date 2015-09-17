@@ -2,7 +2,7 @@
 Master Ball
 Ultra Ball
 Great Ball
-Poké Ball
+Poke Ball
 Safari Ball
 Net Ball
 Dive Ball
@@ -61,7 +61,7 @@ X Speed
 X Accuracy
 X Sp. Atk
 X Sp. Def
-Poké Doll
+Poke Doll
 Fluffy Tail
 Blue Flute
 Yellow Flute
@@ -429,7 +429,7 @@ HM06
 Explorer Kit
 Loot Sack
 Rule Book
-Poké Radar
+Poke Radar
 Point Card
 Journal
 Seal Case
@@ -575,7 +575,7 @@ Plume Fossil
 Liberty Pass
 Pass Orb
 Dream Ball
-Poké Toy
+Poke Toy
 Prop Case
 Dragon Skull
 Balm Mushroom
@@ -649,7 +649,7 @@ Sachet
 Luminous Moss
 Snowball
 Safety Goggles
-Poké Flute
+Poke Flute
 Rich Mulch
 Surprise Mulch
 Boost Mulch
@@ -722,7 +722,7 @@ Wailmer Pail
 Devon Parts
 Soot Sack
 Basement Key
-Pokéblock Kit
+Pokeblock Kit
 Letter
 Eon Ticket
 Scanner
