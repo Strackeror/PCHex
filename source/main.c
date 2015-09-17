@@ -114,7 +114,11 @@ int 	main()
     exportSave(save, game, &sdHandle, &sdArchive);
 
   end:
-  printf("Program ended, press A to come back to HB menu\n");
+
+  consoleSelect(&bot);
+  consoleClear();
+  printf("\x1B[15;2H");
+  printf("Program ended, press A to finish\n");
   waitKey(KEY_A);
   free(save);
   gfxExit();

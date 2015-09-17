@@ -34,6 +34,7 @@ typedef struct s_stateInfo t_stinf;
 
 extern struct s_UIState pkmSelectState;
 extern struct s_UIState pkmGeneralState;
+extern struct s_UIState pkmCombatState;
 
 s32     saveFile(char *path, void *src, u64 size, FS_archive *archive, Handle *fsHandle, u32 *bytesWritten);
 s32 	loadFile(char *path, void *dst, FS_archive *fsarch, Handle *fshdl, u64 maxSize, u32 *bytesRead);

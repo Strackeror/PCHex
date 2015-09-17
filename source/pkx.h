@@ -121,6 +121,7 @@ struct s_pkm
 s32     decryptPokemon(u8 *enc, u8 *dec);
 s32    	encryptPokemon(u8 *dec, u8 *enc);
 u8 	getPkmIV(u32 individualValues, u8 stat);
+s8 	setPkmIV(u8 val, u8 stat, struct s_pkm *pkm);
 s8 	setPkmLevel(struct s_pkm *, u8 level);
 s8 	pkmRecalc(struct s_pkm *);
 

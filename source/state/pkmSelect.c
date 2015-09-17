@@ -59,7 +59,7 @@ void 	pkmSelectInput(t_stinf *state)
     return;
   }
   if (kPressed & KEY_A)
-  { switchState(state, pkmGeneralState); return;}
+  { switchState(state, pkmGeneralState); state->modded = 0; return;}
   if (kPressed & KEY_LEFT)
     slotChange -= 1;
   if (kPressed & KEY_RIGHT)

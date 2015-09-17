@@ -7,7 +7,7 @@
 #include "../pchex.h"
 #include "state.h"
 
-char helpstrings[20][3][50] = {
+char helpstringsGen[20][3][50] = {
   { "Up/Down/Left/Right : Choose field",
     "A : Select field ",
     "Select : Save  | Start : Back" },
@@ -28,28 +28,10 @@ char helpstrings[20][3][50] = {
   {"","","B : Leave field"},
 };
 
-void 	resetColor()
-{
-  printf("\x1B[0m");
-}
-
-int 	selectColor(u8 tState, u8 curState, u8 selected)
-{
-  if (tState == curState)
-    if (selected)
-      printf("\x1B[7m");
-    else
-      printf("\x1B[4m");
-  else
-    printf("\x1B[0m");
-  return 0;
-}
-
 void 	pkmGeneralInit(t_stinf *state)
 {
   state->inState = 1;
   state->inSel = 0;
-  state->modded = 0;
   consoleClear();
 }
 
@@ -61,9 +43,9 @@ void 	pkmGeneralHelp(t_stinf *state)
     printf("-");
   if (!state->inSel)
     sel = 0;
-  printf("%-40s", helpstrings[sel][0]);
-  printf("%-40s", helpstrings[sel][1]);
-  printf("%-40s", helpstrings[sel][2]);
+  printf("%-40s", helpstringsGen[sel][0]);
+  printf("%-40s", helpstringsGen[sel][1]);
+  printf("%-40s", helpstringsGen[sel][2]);
 }
 
 void 	pkmGeneralTrainerDisplay(t_stinf *state)
@@ -129,7 +111,8 @@ void 	pkmGeneralDisplay(t_stinf *state)
   char 	tmp[50];
 
   printf("\x1B[0;0H");
-  printf("General\n\n");
+  printf("General\x1B[0;17H\x1B[2mCombat\x1B[0m\n");
+  printf("<<L R>>\n");
   printf("Box %-2d Slot %-2d\n", state->pkmSlot / 30 + 1, state->pkmSlot % 30 + 1);
   if (state->modded) printf("\x1B[31mModified\x1B[0m");
   else printf("%-8s", "");
@@ -176,6 +159,11 @@ void 	pkmGeneralInput(t_stinf *state)
   {
     savePokemon(state, state->pkmSlot, (u8 *)&state->pkm.pkx);
     state->modded = 0;
+  }
+  if (kPressed & KEY_R)
+  {
+    switchState(state, pkmCombatState);
+    return;
   }
   pkmGenInputField(state);
 }

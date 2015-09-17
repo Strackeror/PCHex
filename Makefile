@@ -34,7 +34,7 @@ DATA		:=	data
 INCLUDES	:=	include
 
 APP_TITLE 	:= 	PCHex
-APP_DESCRIPTION := 	'A Gen6 save editor'
+APP_DESCRIPTION := 	A Gen6 save editor
 APP_AUTHOR 	:= 	Stracker
 
 #---------------------------------------------------------------------------------

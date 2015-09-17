@@ -252,6 +252,19 @@ char 	*getHdlName(char *dst, struct s_pkm *pkm)
   return (getu16Name(dst, pkm->pkx.handlerName));
 }
 
+s8 	setPkmIV(u8 val, u8 stat, struct s_pkm *pkm)
+{
+  u32 	nval = val;
+  u32 	mask = 0xFFFFFFFF;
+  mask ^= 0x1F << (5 * stat);
+  
+  u32 	iv32 = pkm->pkx.individualValues;
+  iv32 &= mask;
+  iv32 ^= ((nval & 0x1F) << (5 * stat));
+  pkm->pkx.individualValues = iv32;
+  return 0;
+}
+
 u8 	getPkmIV(u32 individualValues, u8 stat)
 {
   return (individualValues >> (5 * stat)) & 0x1F;
