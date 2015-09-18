@@ -73,15 +73,20 @@ void 	pkmComAbility(t_stinf *state)
 
   u32	kPressed = state->kPressed;
   s8	abilNum = state->pkm.pkx.abilityNum;
-
   if (kPressed & KEY_UP)
-    abilNum++;
+  {
+    if (abilNum == 2)
+      abilNum = 4;
+    else if (abilNum < 4)
+      abilNum++;
+  }
   if (kPressed & KEY_DOWN)
-    abilNum--;
-  if (abilNum < 0)
-    abilNum = 0;
-  if (abilNum > 2)
-    abilNum = 2;
+  {
+    if (abilNum == 4)
+      abilNum = 2;
+    else if (abilNum > 0)
+      abilNum--;
+  }
   if (abilNum != state->pkm.pkx.abilityNum)
   {
     setPkmAbilityNum(&state->pkm, abilNum);

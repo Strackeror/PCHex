@@ -170,10 +170,11 @@ s8	isShiny(struct s_pkm *pkm)
 
 s8	setPkmAbilityNum(struct s_pkm *pkm, u8 abilNum)
 {
-  if (abilNum > 2)
+  if (abilNum > 4 || abilNum == 3 || !abilNum)
     return -1;
+  u8 offs = abilNum == 4 ? 3 : abilNum;
   pkm->pkx.abilityNum = abilNum;
-  pkm->pkx.ability = pkData.pkmData[pkm->pkx.species][6 + abilNum];
+  pkm->pkx.ability = pkData.pkmData[pkm->pkx.species][5 + offs];
   return 0;
 }
 

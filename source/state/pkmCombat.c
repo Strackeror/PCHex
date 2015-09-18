@@ -76,6 +76,7 @@ void 	pkmCombatDisplay(t_stinf *state)
 {
   struct s_pkx *pkx = &state->pkm.pkx;
   u8	ist = state->inState, sel = state->inSel;
+  char 	tmp[9];
 
   printf("\x1B[0;0H");
   printf("\x1B[2mGeneral\x1B[0m\x1B[0;17HCombat\n");
@@ -85,7 +86,8 @@ void 	pkmCombatDisplay(t_stinf *state)
   printf("\n");
   
   selectColor(1, ist, sel);
-  printf("Ability : %14s (%d)\n", pkData.abilities[pkx->ability], pkx->abilityNum);
+  pkx->abilityNum == 4 ? sprintf(tmp, "(H)") : sprintf(tmp, "(%d)", pkx->abilityNum);
+  printf("Ability : %14s %s\n", pkData.abilities[pkx->ability], tmp);
   printf("\n");
 
   for (int i = 0; i < 6; i++)
