@@ -96,6 +96,11 @@ void 	pkmComAbility(t_stinf *state)
 
 void 	pkmComMove(t_stinf *state, u8 move)
 {
+  if (!move)
+  {
+    stdInputField(state, -2, 1, 0, 0);
+    return;
+  }
   if (stdInputField(state, -1, 1, 0, 0)) return;
 }
 

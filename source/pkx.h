@@ -127,11 +127,13 @@ s8 	pkmRecalc(struct s_pkm *);
 
 s8 	setPkmAbilityNum(struct s_pkm *pkm, u8 abilum);
 
+s8 	getPkmGender(struct s_pkm *);
+s8 	setPkmGender(struct s_pkm *pkm, u8 gender);
+
 s8 	rerollPID(struct s_pkm *);
 s8 	rerollPIDspe(struct s_pkm *, u8 shiny, u8 gender);
 
 s8 	isShiny(struct s_pkm *);
-s8 	getGender(struct s_pkm *);
 
 s8	setNickname(char *src, struct s_pkm *pkm);
 char 	*getNickname(char *dst, struct s_pkm *pkm);

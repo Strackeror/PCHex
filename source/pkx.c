@@ -178,7 +178,7 @@ s8	setPkmAbilityNum(struct s_pkm *pkm, u8 abilNum)
   return 0;
 }
 
-s8	getGender(struct s_pkm *pkm)
+s8	getPIDGender(struct s_pkm *pkm)
 {
   u8	gratio = pkData.pkmData[pkm->pkx.species][0xA];
 
@@ -191,6 +191,19 @@ s8	getGender(struct s_pkm *pkm)
     return 1;
   else
     return 0;
+}
+
+s8 	getPkmGender(struct s_pkm *pkm)
+{
+  return (pkm->pkx.formFlags >> 1) & 0x3;
+}
+
+s8 	setPkmGender(struct s_pkm *pkm, u8 gender)
+{
+  pkm->pkx.formFlags &= 0xF9;
+  pkm->pkx.formFlags ^= (gender & 0x3) << 1;
+  pkmRecalc(pkm);
+  return 0;
 }
 
 s8	setu16Name(char *src, u8 *dest)
@@ -291,7 +304,7 @@ s8 	pkmRecalc(struct s_pkm *pkm)
     pkm->stat[i] = calcPkmStat(pkm->pkx.species, getPkmIV(pkm->pkx.individualValues, i),
 			      pkm->pkx.effortValues[i], pkm->pkx.nature, pkm->level, i);
   pkm->isShiny = isShiny(pkm);
-  pkm->gender = getGender(pkm);
+  pkm->gender = getPkmGender(pkm);
   return 0;
 }
 

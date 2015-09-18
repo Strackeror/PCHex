@@ -23,9 +23,9 @@ void 	pkmGenPID(t_stinf *state)
   if (kPressed & KEY_Y) {rerollPIDspe(&state->pkm, 1, state->pkm.gender); state->modded = 1;}
 }
 
-void 	pkmGenGender(t_stinf *state)
+void 	pkmGenGender(t_stinf *state) //16
 {
-  if (dirInputField(state, 3, 4, 0, 0)) return;
+  if (dirInputField(state, 3, 17, 0, 0)) return;
 
   u32 kPressed = state->kPressed;
   if (kPressed & KEY_X)
@@ -35,7 +35,53 @@ void 	pkmGenGender(t_stinf *state)
     if (pkData.pkmData[state->pkm.pkx.species][0xA] == 0 ||
 	pkData.pkmData[state->pkm.pkx.species][0xA] >= 254)
       return;
-    rerollPIDspe(&state->pkm, state->pkm.isShiny, !state->pkm.gender);
+    setPkmGender(&state->pkm, !state->pkm.gender);
+    state->modded = 1;
+  }
+}
+
+void 	pkmGenPKRSStrain(t_stinf *state) //17
+{
+  if (dirInputField(state, 16, 4, 0, 18)) return;
+
+  u32	kPressed = state->kPressed;
+  s8	strain = state->pkm.pkx.pokerus >> 4;
+
+  if (kPressed & KEY_UP)
+    strain += 1;
+  if (kPressed & KEY_DOWN)
+    strain -= 1;
+  if (strain < 0)
+    strain = 0;
+  if (strain > 15)
+    strain = 15;
+  if (strain != state->pkm.pkx.pokerus >> 4)
+  {
+    state->pkm.pkx.pokerus &= 0xF;
+    state->pkm.pkx.pokerus ^= strain << 4;
+    state->modded = 1;
+  }
+}
+
+void 	pkmGenPKRSLeft(t_stinf *state) //18
+{
+  if (dirInputField(state, 16, 4, 17, 0)) return;
+
+  u32	kPressed = state->kPressed;
+  s8	strain = state->pkm.pkx.pokerus & 0xF;
+
+  if (kPressed & KEY_UP)
+    strain += 1;
+  if (kPressed & KEY_DOWN)
+    strain -= 1;
+  if (strain < 0)
+    strain = 0;
+  if (strain > 15)
+    strain = 15;
+  if (strain != (state->pkm.pkx.pokerus & 0xF))
+  {
+    state->pkm.pkx.pokerus &= 0xF0;
+    state->pkm.pkx.pokerus ^= strain;
     state->modded = 1;
   }
 }
@@ -43,7 +89,7 @@ void 	pkmGenGender(t_stinf *state)
 void 	pkmGenEXP(t_stinf *state)
 {
   u32 	kPressed = state->kPressed;
-  if (dirInputField(state, 16, 5, 0, 0)) return;
+  if (dirInputField(state, 17, 5, 0, 0)) return;
 
   s8 	addLevel = 0;
   if (kPressed & KEY_UP)
@@ -151,6 +197,7 @@ void 	pkmGenInputField(t_stinf *state)
     case 14: pkmGenHeldItem(state); break;
     case 15: pkmGenPokeball(state); break;
     case 16: pkmGenGender(state); break;
-
+    case 17: pkmGenPKRSStrain(state); break;
+    case 18: pkmGenPKRSLeft(state); break;
   }
 }

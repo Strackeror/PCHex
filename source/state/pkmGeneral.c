@@ -27,6 +27,8 @@ char helpstringsGen[20][3][50] = {
   {"","","B : Leave field"},
   {"","","B : Leave field"},
   {"","X : Switch gender","B : Leave field"},
+  {"0 : Not Infected","Up/Down : Add/Substract","B : Leave field"},
+  {"0 : Cured / Not Infected","Up/Down : Add/Substract","B : Leave field"},
 };
 
 void 	pkmGeneralInit(t_stinf *state)
@@ -114,9 +116,12 @@ void 	pkmGeneralDisplay(t_stinf *state)
   printf("\x1B[0;0H");
   printf("General\x1B[0;17H\x1B[2mCombat\x1B[0m\n");
   printf("<<L R>>\n");
-  printf("Box %-2d Slot %-2d\n", state->pkmSlot / 30 + 1, state->pkmSlot % 30 + 1);
+
   if (state->modded) printf("\x1B[31mModified\x1B[0m");
   else printf("%-8s", "");
+  printf("\n");
+
+  printf("Box %-2d Slot %-2d\n", state->pkmSlot / 30 + 1, state->pkmSlot % 30 + 1);
   printf("\n");
 
   selectColor(1, ist, sel);
@@ -136,7 +141,16 @@ void 	pkmGeneralDisplay(t_stinf *state)
   printf("Gender: %-8s\n", genderstr[state->pkm.gender]);
   printf("\n");
 
+  resetColor();
+  printf("PKRS:    ");
+  selectColor(17, ist, sel);
+  printf("Strain:%-2d", state->pkm.pkx.pokerus >> 4);
+  resetColor(); printf("    ");
+  selectColor(18, ist, sel);
+  printf("Left:%-2d\n", state->pkm.pkx.pokerus % 0x10);
   selectColor(4, ist, sel);
+
+  printf("\n");
   printf("EXP : %-7ld\nLevel : %-3d\n\n", pkx->expPoints, state->pkm.level);
 
   pkmGeneralTrainerDisplay(state);
