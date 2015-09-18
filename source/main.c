@@ -94,11 +94,11 @@ int 	main()
 
   srand(svcGetSystemTick());
 
-  printf("Init Filesystem...");
+  printf("Init Filesystem...\n");
   if (filesysInit(&sdHandle, &saveHandle, &sdArchive, &saveArchive))
-  { printf(" Failed\n"); goto end;}
+  { printf("Init FS Failed\n"); goto end;}
   else
-    printf(" OK\n");
+    printf("Init FS OK\n");
 
   if (loadData(&sdHandle, &sdArchive))
     goto end;
