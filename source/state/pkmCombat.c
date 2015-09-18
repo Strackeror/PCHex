@@ -9,7 +9,7 @@ char helpstringsCom[20][3][50] = {
   { "Up/Down/Left/Right : Choose field",
     "A : Select field ",
     "Select : Save  | Start : Back" },
-  {"","","B : Leave field"},
+  {"","Up/Down : Previous/Next Ability","B : Leave field"},
   {"","Up/Down : +/- 1 | Left/Right : Min/Max","B : Leave field"},
   {"X : +1","Up/Down : +/- 4 | Left/Right : Min/Max","B : Leave field"},
   {"","Up/Down : +/- 1 | Left/Right : Min/Max","B : Leave field"},
@@ -45,6 +45,17 @@ void 	pkmCombatInit(t_stinf *state)
   consoleClear();
 }
 
+void 	moveField(t_stinf *state, s8 tstate, s8 move)
+{
+  if (move > 7)
+    return;
+  selectColor(tstate, state->inState, state->inSel);
+  if (move <= 3)
+    printf("Move %d:%-16s\n", move + 1, pkData.moves[state->pkm.pkx.moves[move]]);
+  else
+    printf("Egg Move %d:%-16s\n", move - 3, pkData.moves[state->pkm.pkx.relearnMoves[move - 4]]);
+}
+
 void 	statField(t_stinf *state, s8 tstate, s8 stat)
 {
   char	str[6][4] = {"HP", "ATK", "DEF", "SPE", "SPA", "SPD"};
@@ -69,7 +80,6 @@ void 	pkmCombatDisplay(t_stinf *state)
   printf("\x1B[0;0H");
   printf("\x1B[2mGeneral\x1B[0m\x1B[0;17HCombat\n");
   printf("\x1B[1;17H<<L R>>\n");
-  printf("Box %-2d Slot %-2d\n", state->pkmSlot / 30 + 1, state->pkmSlot % 30 + 1);
   if (state->modded) printf("\x1B[31mModified\x1B[0m");
   else printf("%-8s", "");
   printf("\n");
@@ -80,6 +90,11 @@ void 	pkmCombatDisplay(t_stinf *state)
 
   for (int i = 0; i < 6; i++)
     statField(state, (i + 1) * 2, i);
+
+  printf("\n");
+
+  for (int i = 0; i < 8; i++)
+    moveField(state, 14 + i, i);
 
   resetColor();
   printf("\x1B[26;0H");

@@ -26,6 +26,7 @@ char helpstringsGen[20][3][50] = {
   {"","","B : Leave field"},
   {"","","B : Leave field"},
   {"","","B : Leave field"},
+  {"","X : Switch gender","B : Leave field"},
 };
 
 void 	pkmGeneralInit(t_stinf *state)
@@ -126,12 +127,13 @@ void 	pkmGeneralDisplay(t_stinf *state)
   printf("\n");
 
   selectColor(3, ist, sel);
-  printf("PID : %08lx\n", pkx->personalityID);
+  printf("PID : %08lx", pkx->personalityID);
+  printf("    Shiny : %-3s\n", state->pkm.isShiny ? "Yes" : "No");
   resetColor();
 
+  selectColor(16, ist, sel);
   char	genderstr[3][8] = {"Male", "Female", "None"};
   printf("Gender: %-8s\n", genderstr[state->pkm.gender]);
-  printf("Shiny : %-3s\n", state->pkm.isShiny ? "Yes" : "No");
   printf("\n");
 
   selectColor(4, ist, sel);

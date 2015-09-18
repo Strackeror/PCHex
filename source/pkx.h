@@ -125,9 +125,10 @@ s8 	setPkmIV(u8 val, u8 stat, struct s_pkm *pkm);
 s8 	setPkmLevel(struct s_pkm *, u8 level);
 s8 	pkmRecalc(struct s_pkm *);
 
+s8 	setPkmAbilityNum(struct s_pkm *pkm, u8 abilum);
+
 s8 	rerollPID(struct s_pkm *);
-s8 	rerollPIDGender(struct s_pkm *pkm, u8 gender);
-s8 	rerollPIDShiny(struct s_pkm *);
+s8 	rerollPIDspe(struct s_pkm *, u8 shiny, u8 gender);
 
 s8 	isShiny(struct s_pkm *);
 s8 	getGender(struct s_pkm *);

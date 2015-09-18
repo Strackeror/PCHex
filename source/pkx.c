@@ -141,40 +141,23 @@ s8 	rerollPID(struct s_pkm *pkm)
   return 0;
 }
 
-s8	rerollPIDGender(struct s_pkm *pkm, u8 gender)
+s8 	rerollPIDspe(struct s_pkm *pkm, u8 shiny, u8 gender)
 {
-  u8	gratio = pkData.pkmData[pkm->pkx.species][0xA];
-  u8 	pid = rand();
-
-  if (gratio == 255)
+  u8 	gendercond;
+  u8	shinycond;
+  for (int i = 0; i < 80000; i++)
   {
-    pkm->pkx.personalityID = pid;
-    pkmRecalc(pkm);
-    return 0;
-  }
-  if (gratio == 254)
-    gratio++;
-  for (;;)
-  {
-    u32 gv = (pid & 0xFF);
-    if (gender == 2)
-      break;
-    if ((gender == 1) && gv <= gratio)
-      break;
-    if ((gender == 0) && gv > gratio)
-      break;
-    pid = rand();
-  }
-  pkm->pkx.personalityID = pid;
-  pkmRecalc(pkm);
-  return 0;
-}
-
-s8 	rerollPIDShiny(struct s_pkm *pkm)
-{
-  while (!pkm->isShiny)
     rerollPID(pkm);
-  return 0;
+    shinycond = 0;
+    if (shiny == 2 || pkm->isShiny == shiny)
+      shinycond = 1;
+    gendercond = 0;
+    if (gender == 2 || pkm->gender == gender)
+      gendercond = 1;
+    if (shinycond && gendercond)
+      return 0;
+  }
+  return -1;
 }
 
 s8	isShiny(struct s_pkm *pkm)
@@ -183,6 +166,15 @@ s8	isShiny(struct s_pkm *pkm)
   u16 pkmSV = ((pkm->pkx.personalityID >> 16) ^ (pkm->pkx.personalityID & 0xFFFF)) >> 4;
 
   return (pkmSV == trainerSV);
+}
+
+s8	setPkmAbilityNum(struct s_pkm *pkm, u8 abilNum)
+{
+  if (abilNum > 2)
+    return -1;
+  pkm->pkx.abilityNum = abilNum;
+  pkm->pkx.ability = pkData.pkmData[pkm->pkx.species][6 + abilNum];
+  return 0;
 }
 
 s8	getGender(struct s_pkm *pkm)

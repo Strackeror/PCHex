@@ -16,17 +16,34 @@ void 	pkmGenNickname(t_stinf *state)
 
 void 	pkmGenPID(t_stinf *state)
 {
-  if (stdInputField(state, -1, 1, 0, 0)) return;
+  if (dirInputField(state, 2, 16, 0, 0)) return;
 
   u32 	kPressed = state->kPressed;
-  if (kPressed & KEY_X) {rerollPID(&state->pkm); state->modded = 1;}
-  if (kPressed & KEY_Y) {rerollPIDShiny(&state->pkm); state->modded = 1;}
+  if (kPressed & KEY_X) {rerollPIDspe(&state->pkm, 2, state->pkm.gender); state->modded = 1;}
+  if (kPressed & KEY_Y) {rerollPIDspe(&state->pkm, 1, state->pkm.gender); state->modded = 1;}
+}
+
+void 	pkmGenGender(t_stinf *state)
+{
+  if (dirInputField(state, 3, 4, 0, 0)) return;
+
+  u32 kPressed = state->kPressed;
+  if (kPressed & KEY_X)
+  {
+    if (state->pkm.gender == 2)
+      return;
+    if (pkData.pkmData[state->pkm.pkx.species][0xA] == 0 ||
+	pkData.pkmData[state->pkm.pkx.species][0xA] >= 254)
+      return;
+    rerollPIDspe(&state->pkm, state->pkm.isShiny, !state->pkm.gender);
+    state->modded = 1;
+  }
 }
 
 void 	pkmGenEXP(t_stinf *state)
 {
   u32 	kPressed = state->kPressed;
-  if (stdInputField(state, -1, 1, 0, 0)) return;
+  if (dirInputField(state, 16, 5, 0, 0)) return;
 
   s8 	addLevel = 0;
   if (kPressed & KEY_UP)
@@ -133,5 +150,7 @@ void 	pkmGenInputField(t_stinf *state)
     case 13: pkmGenOrigGame(state); break;
     case 14: pkmGenHeldItem(state); break;
     case 15: pkmGenPokeball(state); break;
+    case 16: pkmGenGender(state); break;
+
   }
 }
