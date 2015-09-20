@@ -33,31 +33,31 @@ s8 	loadData(Handle *sdHandle, FS_archive *sdArchive)
   u32 	bytesRead;
   Result ret;
 
-  printf("loading specie data...");
+  printf("Loading species data...");
   ret = loadFile("/3ds/PCHex/data/personal", tmp, sdArchive, sdHandle, 12000, &bytesRead); 
   if (ret) { printf("loading failed : error code %ld\n", ret); return ret; }
   memcpy(pkData.pkmData, tmp, bytesRead);
   printf(" OK\n");
 
-  printf("loading species names...");
+  printf("Loading species names...");
   ret = loadFile("/3ds/PCHex/data/text/text_Species_en.txt", tmp, sdArchive, sdHandle, 12000, &bytesRead);
   if (ret) { printf("loading failed : error code %ld\n", ret); return ret; }
   loadLines(tmp, pkData.species[0], 12, bytesRead);
   printf(" OK\n");
 
-  printf("loading move names...");
+  printf("Loading move names...");
   ret = loadFile("/3ds/PCHex/data/text/text_Moves_en.txt", tmp, sdArchive, sdHandle, 12000, &bytesRead);
   if (ret) { printf("loading failed : error code %ld\n", ret); return ret; }
   loadLines(tmp, pkData.moves[0], 17, bytesRead);
   printf(" OK\n");
 
-  printf("loading ability names...");
+  printf("Loading ability names...");
   ret = loadFile("/3ds/PCHex/data/text/text_Abilities_en.txt", tmp, sdArchive, sdHandle, 12000, &bytesRead);
   if (ret) { printf("loading failed : error code %ld\n", ret); return ret; }
   loadLines(tmp, pkData.abilities[0], 15, bytesRead);
   printf(" OK\n");
 
-  printf("loading item names...");
+  printf("Loading item names...");
   ret = loadFile("/3ds/PCHex/data/text/text_Items_en.txt", tmp, sdArchive, sdHandle, 12000, &bytesRead);
   if (ret) { printf("loading failed : error code %ld\n", ret); return ret; }
   loadLines(tmp, pkData.items[0], 17, bytesRead);
