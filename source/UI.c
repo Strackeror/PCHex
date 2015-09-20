@@ -57,6 +57,7 @@ s32 	startLoop(u8 *save, u8 game, PrintConsole *top, PrintConsole *bot)
   state.cont = 1;
   state.inState = 1;
   state.curState.initf(&state);
+  memset(&state.cpy, 0, sizeof(state.cpy));
   while (state.cont > 0 && aptMainLoop())
   {
     hidScanInput();

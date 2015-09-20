@@ -10,7 +10,7 @@
 char helpstringsGen[20][3][50] = {
   { "Up/Down/Left/Right : Choose field",
     "A : Select field ",
-    "Select : Save  | Start : Back" },
+    "Start : Back" },
   {"","","B : Leave field"},
   { "", "X : Set Species as Nickname", "B : Leave field" },
   {"X : Reroll","Y : Shinify","B : Leave field"},
@@ -113,12 +113,7 @@ void 	pkmGeneralDisplay(t_stinf *state)
   u8	ist = state->inState, sel = state->inSel;
   char 	tmp[50];
 
-  printf("\x1B[0;0H");
-  printf("General\x1B[0;17H\x1B[2mCombat\x1B[0m\n");
-  printf("<<L R>>\n");
-
-  if (state->modded) printf("\x1B[31mModified\x1B[0m");
-  else printf("%-8s", "");
+  pkmHeader(state);
   printf("\n");
 
   printf("Box %-2d Slot %-2d\n", state->pkmSlot / 30 + 1, state->pkmSlot % 30 + 1);
@@ -171,11 +166,6 @@ void 	pkmGeneralInput(t_stinf *state)
     switchState(state, pkmSelectState);
     return;
   }
-  if (kPressed & KEY_SELECT)
-  {
-    savePokemon(state, state->pkmSlot, (u8 *)&state->pkm.pkx);
-    state->modded = 0;
-  }
   if (kPressed & KEY_R)
   {
     switchState(state, pkmCombatState);
@@ -185,3 +175,4 @@ void 	pkmGeneralInput(t_stinf *state)
 }
 
 struct s_UIState pkmGeneralState = {&pkmGeneralInit, &pkmGeneralDisplay, &pkmGeneralInput};
+

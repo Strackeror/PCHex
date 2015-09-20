@@ -83,7 +83,7 @@ s32	filesysInit(Handle *sd, Handle *save, FS_archive *sdarch, FS_archive *savear
   if (ret) return ret;
 
   printf("  Opening save archive\n");
-  *savearch = (FS_archive){0x4, (FS_path){PATH_EMPTY, 1, (u8*)""}, 0, 0};
+  *savearch = (FS_archive){0x4, (FS_path){PATH_EMPTY, 0, NULL}, 0, 0};
   ret = FSUSER_OpenArchive(save, savearch);
   if (ret) return ret;
 

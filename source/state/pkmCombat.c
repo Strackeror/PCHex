@@ -8,7 +8,7 @@
 char helpstringsCom[20][3][50] = {
   { "Up/Down/Left/Right : Choose field",
     "A : Select field ",
-    "Select : Save  | Start : Back" },
+    "Start : Back" },
   {"","Up/Down : Previous/Next Ability","B : Leave field"},
   {"","Up/Down : +/- 1 | Left/Right : Min/Max","B : Leave field"},
   {"X : +1","Up/Down : +/- 4 | Left/Right : Min/Max","B : Leave field"},
@@ -78,11 +78,7 @@ void 	pkmCombatDisplay(t_stinf *state)
   u8	ist = state->inState, sel = state->inSel;
   char 	tmp[9];
 
-  printf("\x1B[0;0H");
-  printf("\x1B[2mGeneral\x1B[0m\x1B[0;17HCombat\n");
-  printf("\x1B[1;17H<<L R>>\n");
-  if (state->modded) printf("\x1B[31mModified\x1B[0m");
-  else printf("%-8s", "");
+  pkmHeader(state);
   printf("\n");
   
   selectColor(1, ist, sel);
@@ -112,14 +108,14 @@ void 	pkmCombatInput(t_stinf *state)
     switchState(state, pkmSelectState);
     return;
   }
-  if (kPressed & KEY_SELECT)
-  {
-    savePokemon(state, state->pkmSlot, (u8 *)&state->pkm.pkx);
-    state->modded = 0;
-  }
   if (kPressed & KEY_L)
   {
     switchState(state, pkmGeneralState);
+    return;
+  }
+  if (kPressed & KEY_R)
+  {
+    switchState(state, pkmManageState);
     return;
   }
   pkmComInputField(state);

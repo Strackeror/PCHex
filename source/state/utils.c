@@ -61,3 +61,48 @@ void 	selectColor(u8 tState, u8 curState, u8 selected)
     printf("\x1B[0m");
   return;
 }
+
+void  	pkmHeader(t_stinf *state)
+{
+  state->console[1]->cursorX = 0;
+  state->console[1]->cursorY = 0;
+
+  if (state->curState.dispf == pkmGeneralState.dispf)
+    printf("\x1B[0m");
+  else
+    printf("\x1B[2m");
+  printf("General");
+
+  state->console[1]->cursorX = 16;
+
+  if (state->curState.dispf == pkmCombatState.dispf)
+    printf("\x1B[0m");
+  else
+    printf("\x1B[2m");
+  printf("Combat");
+
+  state->console[1]->cursorX = 33;
+
+  if (state->curState.dispf == pkmManageState.dispf)
+    printf("\x1B[0m");
+  else
+    printf("\x1B[2m");
+  printf("Manage");
+
+  printf("\n");
+  if (state->curState.dispf == pkmGeneralState.dispf)
+    state->console[1]->cursorX = 0;
+  if (state->curState.dispf == pkmCombatState.dispf)
+    state->console[1]->cursorX = 16;
+  if (state->curState.dispf == pkmManageState.dispf)
+    state->console[1]->cursorX = 33;
+  printf("\x1B[0m<<L R>>");
+
+  state->console[1]->cursorX = 0;
+  state->console[1]->cursorY = 2;
+  if (state->modded)
+    printf("\x1B[31mModified");
+  else
+    printf("%-8s", "");
+  printf("\x1B[0m");
+}

@@ -12,4 +12,5 @@ s8 	stdInputField(t_stinf *state, s8 up, s8 down, s8 left, s8 right);
 s8 	dirInputField(t_stinf *state, s8 up, s8 down, s8 left, s8 right);
 
 void 	debugPrint(t_stinf *, char *);
+void 	pkmHeader(t_stinf *);
 #endif /* end of include guard: STATE_H */

@@ -84,6 +84,7 @@ void 	waitKey(u32 keyWait)
 int 	main()
 {
   u8 	*save = NULL;
+  s32	fs;
   PrintConsole 	top, bot;
   Handle sdHandle, saveHandle;
   FS_archive sdArchive, saveArchive;
@@ -95,8 +96,9 @@ int 	main()
   srand(svcGetSystemTick());
 
   printf("Init Filesystem...\n");
-  if (filesysInit(&sdHandle, &saveHandle, &sdArchive, &saveArchive))
-  { printf("Init FS Failed\n"); goto end;}
+  fs = filesysInit(&sdHandle, &saveHandle, &sdArchive, &saveArchive);
+  if (fs)
+    printf("Init FS Failed - Will try to load save from SD\n");
   else
     printf("Init FS OK\n");
 
@@ -104,7 +106,11 @@ int 	main()
     goto end;
 
   save = (u8 *) malloc(0xEB000);
-  s8 game = loadSave(save, &saveHandle, &saveArchive);
+  s8 game;
+  if (fs)
+    game = loadSave(save, &sdHandle, &sdArchive);
+  else;
+    game = loadSave(save, &saveHandle, &saveArchive);
   s32 ret = 0;
 
   if (game >= 0)
