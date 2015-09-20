@@ -63,6 +63,11 @@ s8 	loadData(Handle *sdHandle, FS_archive *sdArchive)
   loadLines(tmp, pkData.items[0], 17, bytesRead);
   printf(" OK\n");
 
+  printf("Loading ball names...");
+  ret = loadFile("/3ds/PCHex/data/text/text_Balls_en.txt", tmp, sdArchive, sdHandle, 12000, &bytesRead);
+  if (ret) { printf("loading failed : error code %ld\n", ret); return ret; }
+  loadLines(tmp, pkData.balls[0], 12, bytesRead);
+  printf(" OK\n");
   return 0;
 }
 

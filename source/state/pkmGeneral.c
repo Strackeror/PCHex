@@ -104,7 +104,8 @@ void 	pkmGeneralItemDisplay(t_stinf *state)
   printf("Held Item:%-16s\n", pkData.items[pkx->item]);
 
   selectColor(15, ist, sel);
-  printf("Pokeball:%-16s\n", pkData.items[pkx->ballType]);
+  printf("Pokeball:%-16s\n", pkData.balls[pkx->ballType]);
+  
 }
 
 void 	pkmGeneralDisplay(t_stinf *state)
