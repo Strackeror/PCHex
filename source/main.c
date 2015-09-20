@@ -98,7 +98,7 @@ int 	main()
   printf("Init Filesystem...\n");
   fs = filesysInit(&sdHandle, &saveHandle, &sdArchive, &saveArchive);
   if (fs)
-    printf("Init FS Failed - Will try to load save from SD\n");
+    printf("Init FS Failed\n");
   else
     printf("Init FS OK\n");
 
