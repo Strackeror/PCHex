@@ -13,22 +13,23 @@ struct s_UIState
   void (*inputf)(struct s_stateInfo *);
 };
 
+//General state structure
 struct s_stateInfo
 {
-  u32 			kPressed;
-  PrintConsole 		*console[2];
+  u32 			kPressed; //stores what keys are pressed
+  PrintConsole 		*console[2]; //consoles - 0 : top 1 : bottom
 
-  struct s_pkm 		pkm;
-  struct s_pkm 		cpy;
-  s16 			pkmSlot;
-  u8 			game;
-  u8 			*save;
+  struct s_pkm 		pkm; //the currently edited pokemon
+  struct s_pkm 		cpy; //the pokemon in the clipboard
+  s16 			pkmSlot; //the current box slot which is edited
+  u8 			game; //1 is OR/AS, 0 if X/Y
+  u8 			*save; //savefile array
 
-  struct s_UIState 	curState;
-  s8 			inState;
-  u8			inSel;
-  u8 			modded;
-  s8 			cont;
+  struct s_UIState 	curState; //current state
+  s8 			inState; //ID of what is selected
+  u8			inSel; //0 if we're editing a value, 1 if we're not
+  u8 			modded; //1 if the pokemon has been modified, 0 if not
+  s8 			cont; //if 0, terminate the program, if 1, terminate the program and export the savefile
 };
 
 typedef struct s_stateInfo t_stinf;
