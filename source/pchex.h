@@ -53,7 +53,6 @@ u32 	getCHKOffset(u8 game, u8 type, u8 index);
 s32 	switchState(t_stinf *state, struct s_UIState newst);
 s32 	startLoop(u8 *, u8, PrintConsole *, PrintConsole *);
 
-char 	*getstr(char *dst, int maxlen);
 s16 	overlayGetpkm();
 
 #endif /* end of include guard: PCHEX_H */
