@@ -4,6 +4,13 @@
 void 	pkmGenSpecies(t_stinf *state)
 {
   if (stdInputField(state, 0, 1, 0, 0)) return;
+  if (state->kPressed & KEY_A)
+  {
+    u16 target = overlayGetpkm();
+    if (target < 0)
+      return;
+    setPkmSpecies(&state->pkm, target);
+  }
 }
 
 void 	pkmGenNickname(t_stinf *state)

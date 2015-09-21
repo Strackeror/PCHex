@@ -118,6 +118,22 @@ u8 	calcPkmLevel(u16 species, u32 exp)
   return iterLevel;
 }
 
+s8	getPIDGender(struct s_pkm *pkm)
+{
+  u8	gratio = pkData.pkmData[pkm->pkx.species][0xA];
+
+  if (gratio == 255)
+    return 2;
+  if (gratio == 254)
+    gratio++;
+
+  if ((pkm->pkx.personalityID & 0xFF) <= gratio)
+    return 1;
+  else
+    return 0;
+}
+
+
 s8 	setPkmLevel(struct s_pkm *pkm, u8 level)
 {
   u8	xpType = pkData.pkmData[pkm->pkx.species][11];
@@ -131,7 +147,17 @@ s8 	setPkmLevel(struct s_pkm *pkm, u8 level)
 
 s8 	setPkmSpecies(struct s_pkm *pkm, u16 species)
 {
-  return -1;
+  if (species > 721)
+    return -1;
+  pkm->pkx.species = species;
+  setPkmLevel(pkm, pkm->level);
+  setPkmAbilityNum(pkm, pkm->pkx.abilityNum);
+  setPkmGender(pkm, getPIDGender(pkm));
+
+  if (!(pkm->pkx.individualValues >> 31))
+    setNickname((char *)pkData.species[species], pkm);
+  pkmRecalc(pkm);
+  return 0;
 }
 
 s8 	rerollPID(struct s_pkm *pkm)
@@ -176,21 +202,6 @@ s8	setPkmAbilityNum(struct s_pkm *pkm, u8 abilNum)
   pkm->pkx.abilityNum = abilNum;
   pkm->pkx.ability = pkData.pkmData[pkm->pkx.species][5 + offs];
   return 0;
-}
-
-s8	getPIDGender(struct s_pkm *pkm)
-{
-  u8	gratio = pkData.pkmData[pkm->pkx.species][0xA];
-
-  if (gratio == 255)
-    return 2;
-  if (gratio == 254)
-    gratio++;
-
-  if ((pkm->pkx.personalityID & 0xFF) <= gratio)
-    return 1;
-  else
-    return 0;
 }
 
 s8 	getPkmGender(struct s_pkm *pkm)

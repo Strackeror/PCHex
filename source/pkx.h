@@ -119,6 +119,7 @@ struct s_pkm
   u8 		gender;
 };
 
+s8 	setPkmSpecies(struct s_pkm *pkm, u16 species);
 s32     decryptPokemon(u8 *enc, u8 *dec);
 s32    	encryptPokemon(u8 *dec, u8 *enc);
 u8 	getPkmIV(u32 individualValues, u8 stat);

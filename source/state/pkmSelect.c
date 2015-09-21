@@ -81,12 +81,6 @@ void 	pkmSelectInput(t_stinf *state)
       state->pkmSlot = 929;
     reloadPokemon(state);
   }
-  //DEBUG
-  char 	toast[100];
-  consoleSelect(state->console[0]);
-  if (kPressed & KEY_L)
-    printf("%d\n", overlayGetpkm());
-  consoleSelect(state->console[1]);
 }
 
 struct s_UIState pkmSelectState = {&pkmSelectInit, &pkmSelectDisplay, &pkmSelectInput};

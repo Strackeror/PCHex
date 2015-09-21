@@ -27,10 +27,10 @@ Pikachu
 Raichu
 Sandshrew
 Sandslash
-Nidoran♀
+NidoranM
 Nidorina
 Nidoqueen
-Nidoran♂
+NidoranF
 Nidorino
 Nidoking
 Clefairy
@@ -81,7 +81,7 @@ Slowpoke
 Slowbro
 Magnemite
 Magneton
-Farfetch’d
+Farfetch'd
 Doduo
 Dodrio
 Seel
