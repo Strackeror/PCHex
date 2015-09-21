@@ -86,9 +86,9 @@ s32 	exportSave(u8 *save, u8 game, Handle *sdHandle, FS_archive *sdArchive)
   s32 	ret;
 
   printf("Exporting save...");
-  deleteFile(path, sdHandle, sdArchive);
-  rewriteSaveCHK(save, game);
-  ret = saveFile(path, save, len, sdArchive, sdHandle, &bytesWritten);
+  deleteFile(path, sdHandle, sdArchive); //delete the old file, otherwise problems
+  rewriteSaveCHK(save, game); //rewrite checksum, necessary or the save is considered corrupted
+  ret = saveFile(path, save, len, sdArchive, sdHandle, &bytesWritten); //actually write the file
   if (ret) return ret;
   printf(" OK\n");
   printf("exported save to %s\n", path);
@@ -102,8 +102,8 @@ s32 	loadSave(u8 *save, Handle *fshdl, FS_archive *fsarch)
   s32 	ret;
 
   printf("Loading savefile...");
-  ret = loadFile(path, save, fsarch, fshdl, 0xEB000, &bytesRead);
+  ret = loadFile(path, save, fsarch, fshdl, 0xEB000, &bytesRead); //actually loading the file
   if (ret) return -1;
   printf(" OK, read %ld bytes\n", bytesRead);
-  return (getGame(bytesRead));
+  return (getGame(bytesRead)); //we return the which game was found
 }

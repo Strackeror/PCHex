@@ -7,6 +7,10 @@
 #include "../pchex.h"
 #include "state.h"
 
+/*
+ * General tab state
+ */
+
 char helpstringsGen[20][3][50] = {
   { "Up/Down/Left/Right : Choose field",
     "A : Select field ",

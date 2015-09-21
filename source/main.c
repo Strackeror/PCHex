@@ -5,7 +5,7 @@
 
 #include "pchex.h"
 
-
+//Basic line separation to array of strings
 s8 	loadLines(u8 *src, u8 *dst, u8 strlen,  u32 size)
 {
   u16 	readnum = 3;
@@ -27,6 +27,9 @@ s8 	loadLines(u8 *src, u8 *dst, u8 strlen,  u32 size)
   return 0;
 }
 
+/*
+ * loads general pokemon data like names and species data
+ */
 s8 	loadData(Handle *sdHandle, FS_archive *sdArchive)
 {
   u8	tmp[12000];
@@ -93,13 +96,13 @@ int 	main()
   PrintConsole 	top, bot;
   Handle sdHandle, saveHandle;
   FS_archive sdArchive, saveArchive;
-
-  gfxInitDefault();
+  //General Init Stuff
+  gfxInitDefault(); 
   consoleInit(GFX_BOTTOM, &bot);
   consoleInit(GFX_TOP, &top);
+  srand(svcGetSystemTick()); //Seeding rand to generate PIDs
 
-  srand(svcGetSystemTick());
-
+  //Filesystem init
   printf("Init Filesystem...\n");
   fs = filesysInit(&sdHandle, &saveHandle, &sdArchive, &saveArchive);
   if (fs)
@@ -107,25 +110,27 @@ int 	main()
   else
     printf("Init FS OK\n");
 
+  //General Data loading
   if (loadData(&sdHandle, &sdArchive))
     goto end;
 
+  //save loading, save is loaded into the array 'save'
   save = (u8 *) malloc(0xEB000);
   s8 game;
   if (fs)
     game = loadSave(save, &sdHandle, &sdArchive);
-  else;
+  else
     game = loadSave(save, &saveHandle, &saveArchive);
   s32 ret = 0;
 
   if (game >= 0)
-    ret = startLoop(save, game, &top, &bot);
+    ret = startLoop(save, game, &top, &bot); //main loop
   consoleSelect(&top);
   if (ret)
     exportSave(save, game, &sdHandle, &sdArchive);
 
   end:
-
+  //Exit stuff
   consoleSelect(&bot);
   consoleClear();
   printf("\x1B[15;2H");

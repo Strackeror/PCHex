@@ -74,6 +74,16 @@ s32 	deleteFile(char *path, Handle *fsHandle, FS_archive *fsarch)
 s32	filesysInit(Handle *sd, Handle *save, FS_archive *sdarch, FS_archive *savearch)
 {
   Result ret;
+
+  printf("  Getting SD Card handle\n");
+  ret = srvGetServiceHandle(sd, "fs:USER");
+  if (ret) return ret;
+
+  printf("  Opening SD Card archive\n");
+  *sdarch = (FS_archive){0x00000009, (FS_path){PATH_EMPTY, 1, (u8*)""}, 0, 0};
+  ret = FSUSER_OpenArchive(sd, sdarch);
+  if (ret) return ret;
+
   printf("  Getting save handle\n");
   ret = _srvGetServiceHandle(save, "fs:USER");
   if (ret) return ret;
@@ -85,16 +95,8 @@ s32	filesysInit(Handle *sd, Handle *save, FS_archive *sdarch, FS_archive *savear
   printf("  Opening save archive\n");
   *savearch = (FS_archive){0x4, (FS_path){PATH_EMPTY, 0, NULL}, 0, 0};
   ret = FSUSER_OpenArchive(save, savearch);
-  if (ret) return ret;
-
-  printf("  Getting SD Card handle\n");
-  ret = srvGetServiceHandle(sd, "fs:USER");
-  if (ret) return ret;
-
-  printf("  Opening SD Card archive\n");
-  *sdarch = (FS_archive){0x00000009, (FS_path){PATH_EMPTY, 1, (u8*)""}, 0, 0};
-  ret = FSUSER_OpenArchive(sd, sdarch);
   return ret;
+
 }
 
 s32 	filesysExit(Handle *sd, Handle *save, FS_archive *sdarch, FS_archive *savearch)

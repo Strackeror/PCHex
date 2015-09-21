@@ -5,6 +5,10 @@
 
 #include "state.h"
 
+/*
+ * Manage tab state
+ */
+
 char helpstringsMan[10][3][40] = {
   {"Up/Down : Select Field","A : Use Field", "Start : Back"},
   {"","","B : Leave field"},

@@ -5,6 +5,10 @@
 #include "../pchex.h"
 #include "state.h"
 
+/*
+ * Combat tab state
+ */
+
 char helpstringsCom[20][3][50] = {
   { "Up/Down/Left/Right : Choose field",
     "A : Select field ",
