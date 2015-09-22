@@ -129,6 +129,13 @@ s8 	setPkmLevel(struct s_pkm *pkm, u8 level)
   return 0;
 }
 
+s8 	setPkmForm(struct s_pkm *pkm, u8 form)
+{
+  pkm->pkx.formFlags &= 0x7;
+  pkm->pkx.formFlags ^= form << 3;
+  return 0;
+}
+
 s8 	setPkmSpecies(struct s_pkm *pkm, u16 species)
 {
   return -1;
