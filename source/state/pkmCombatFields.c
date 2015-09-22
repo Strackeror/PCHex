@@ -96,12 +96,29 @@ void 	pkmComAbility(t_stinf *state)
 
 void 	pkmComMove(t_stinf *state, u8 move)
 {
+  s8 	up = -1;
   if (!move)
+    up = -2;
+  if (stdInputField(state, up, 1, 0, 0)) return;
+  if (state->kPressed & KEY_A)
   {
-    stdInputField(state, -2, 1, 0, 0);
-    return;
+    s8 	relearn = 0;
+    s16 	target;
+    if (move > 3)
+    {
+      move -= 4;
+      relearn = 1;
+    }
+    target = overlayGetMove();
+    if (target >= 0)
+    {
+      if (relearn)
+	state->pkm.pkx.relearnMoves[move] = target;
+      else
+	state->pkm.pkx.moves[move] = target;
+    }
+    state->inSel = 0;
   }
-  if (stdInputField(state, -1, 1, 0, 0)) return;
 }
 
 void 	pkmComInputField(t_stinf *state)

@@ -178,11 +178,25 @@ void 	pkmGenOrigGame(t_stinf *state)
 void 	pkmGenHeldItem(t_stinf *state)
 {
   if (stdInputField(state, -1, 1, 0, 0)) return;
+  if (state->kPressed & KEY_A)
+  {
+    s16 target = overlayGetItems();
+    if (target < 0)
+      return;
+    state->pkm.pkx.item = target;
+  }
 }
 
 void 	pkmGenPokeball(t_stinf *state)
 {
   if (stdInputField(state, -1, 0, 0, 0)) return;
+  if (state->kPressed & KEY_A)
+  {
+    s8 target = overlayGetBalls();
+    if (target < 0)
+      return;
+    state->pkm.pkx.ballType = target;
+  }
 }
 
 void 	pkmGenInputField(t_stinf *state)

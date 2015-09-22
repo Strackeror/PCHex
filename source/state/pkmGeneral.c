@@ -15,7 +15,7 @@ char helpstringsGen[20][3][50] = {
   { "Up/Down/Left/Right : Choose field",
     "A : Select field ",
     "Start : Back" },
-  {"","","B : Leave field"},
+  {"","A : Choose Species","B : Leave field"},
   { "", "X : Set Species as Nickname", "B : Leave field" },
   {"X : Reroll","Y : Shinify","B : Leave field"},
   {"","Up/Down : Add/Substract a level","B : Leave field"},

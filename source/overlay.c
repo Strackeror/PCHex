@@ -199,7 +199,7 @@ s16	overlayGetpkm()
   struct s_overlay 	over;
   char			tmp[12];
 
-  strcpy(over.list, "abcdefghijkmnopqrstuvwxyz");
+  strcpy(over.list, "abcdefghijkmnopqrstuvwxyz' ");
   strcpy(over.title, "Choose a pokemon");
   over.dst = tmp;
   over.maxlen = 12;
@@ -215,6 +215,96 @@ s16	overlayGetpkm()
   if (over.dataIndex < 0)
     return -1;
   return over.foundIndex[over.dataIndex];
-  
 }
 
+s16	overlayGetMove()
+{
+  struct s_overlay 	over;
+  char			tmp[12];
+
+  strcpy(over.list, "abcdefghijkmnopqrstuvwxyz- ");
+  strcpy(over.title, "Choose a move");
+  over.dst = tmp;
+  over.maxlen = 12;
+  over.offs = 0;
+  over.index = 0;
+  over.dataIndex = -1;
+  over.data = pkData.moves[0];
+  over.entrylen = 17;
+  over.datacount = 622;
+  over.foundIndex[0] = -1;
+  memcpy(&over.win, consoleGetDefault(), sizeof(PrintConsole));
+  launchOverlay(&over);
+  if (over.dataIndex < 0)
+    return -1;
+  return over.foundIndex[over.dataIndex];
+}
+
+s16	overlayGetAbility()
+{
+  struct s_overlay 	over;
+  char			tmp[12];
+
+  strcpy(over.list, "abcdefghijkmnopqrstuvwxyz ");
+  strcpy(over.title, "Choose a move");
+  over.dst = tmp;
+  over.maxlen = 12;
+  over.offs = 0;
+  over.index = 0;
+  over.dataIndex = -1;
+  over.data = pkData.abilities[0];
+  over.entrylen = 15;
+  over.datacount = 192;
+  over.foundIndex[0] = -1;
+  memcpy(&over.win, consoleGetDefault(), sizeof(PrintConsole));
+  launchOverlay(&over);
+  if (over.dataIndex < 0)
+    return -1;
+  return over.foundIndex[over.dataIndex];
+}
+
+s16	overlayGetItems()
+{
+  struct s_overlay 	over;
+  char			tmp[12];
+
+  strcpy(over.list, "abcdefghijkmnopqrstuvwxyz ");
+  strcpy(over.title, "Choose a move");
+  over.dst = tmp;
+  over.maxlen = 12;
+  over.offs = 0;
+  over.index = 0;
+  over.dataIndex = -1;
+  over.data = pkData.items[0];
+  over.entrylen = 17;
+  over.datacount = 775;
+  over.foundIndex[0] = -1;
+  memcpy(&over.win, consoleGetDefault(), sizeof(PrintConsole));
+  launchOverlay(&over);
+  if (over.dataIndex < 0)
+    return -1;
+  return over.foundIndex[over.dataIndex];
+}
+
+s16	overlayGetBalls()
+{
+  struct s_overlay 	over;
+  char			tmp[12];
+
+  strcpy(over.list, "abcdefghijkmnopqrstuvwxyz ");
+  strcpy(over.title, "Choose a move");
+  over.dst = tmp;
+  over.maxlen = 12;
+  over.offs = 0;
+  over.index = 0;
+  over.dataIndex = -1;
+  over.data = pkData.balls[0];
+  over.entrylen = 13;
+  over.datacount = 26;
+  over.foundIndex[0] = -1;
+  memcpy(&over.win, consoleGetDefault(), sizeof(PrintConsole));
+  launchOverlay(&over);
+  if (over.dataIndex < 0)
+    return -1;
+  return over.foundIndex[over.dataIndex];
+}

@@ -55,5 +55,9 @@ s32 	switchState(t_stinf *state, struct s_UIState newst);
 s32 	startLoop(u8 *, u8, PrintConsole *, PrintConsole *);
 
 s16 	overlayGetpkm();
+s16 	overlayGetMove();
+s16 	overlayGetAbility();
+s16 	overlayGetItems();
+s16 	overlayGetBalls();
 
 #endif /* end of include guard: PCHEX_H */
