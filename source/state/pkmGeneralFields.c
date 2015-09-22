@@ -3,7 +3,7 @@
 
 void 	pkmGenSpecies(t_stinf *state)
 {
-  if (stdInputField(state, 0, 1, 0, 0)) return;
+  if (dirInputField(state, 0, 2, 0, 19)) return;
   if (state->kPressed & KEY_A)
   {
     u16 target = overlayGetpkm();
@@ -11,6 +11,25 @@ void 	pkmGenSpecies(t_stinf *state)
       return;
     setPkmSpecies(&state->pkm, target);
   }
+}
+
+void 	pkmGenForm(t_stinf *state)
+{
+  if (dirInputField(state, 0, 2, 1, 0)) return;
+
+  s8 add = 0;
+  s8 form = state->pkm.pkx.formFlags >> 3;
+  if (state->kPressed & KEY_UP)
+    add = 1;
+  if (state->kPressed & KEY_DOWN)
+    add = -1;
+  form += add;
+  if (form < 0)
+    form = 0;
+  if (form > pkData.pkmData[state->pkm.pkx.species][0xC])
+    form = pkData.pkmData[state->pkm.pkx.species][0xC];
+  if (form != state->pkm.pkx.formFlags >> 3)
+    setPkmForm(&state->pkm, form);
 }
 
 void 	pkmGenNickname(t_stinf *state)

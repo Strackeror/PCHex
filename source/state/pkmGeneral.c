@@ -125,8 +125,10 @@ void 	pkmGeneralDisplay(t_stinf *state)
   printf("\n");
 
   selectColor(1, ist, sel);
-  printf("Dex No. %3d : %-12s\n", pkx->species, pkData.species[pkx->species]);
+  printf("Dex No. %3d : %-12s ", pkx->species, pkData.species[pkx->species]);
 
+  selectColor(19, ist, sel);
+  printf("Form ID:%d", pkx->formFlags >> 3);
   selectColor(2, ist, sel);
   printf("Nickname : %-12s", getNickname(tmp, &state->pkm));
   printf("\n");

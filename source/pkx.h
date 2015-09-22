@@ -127,6 +127,8 @@ s8 	setPkmIV(u8 val, u8 stat, struct s_pkm *pkm);
 s8 	setPkmLevel(struct s_pkm *, u8 level);
 s8 	pkmRecalc(struct s_pkm *);
 
+s8 	setPkmForm(struct s_pkm *pkm, u8 form);
+
 s8 	setPkmAbilityNum(struct s_pkm *pkm, u8 abilum);
 
 s8 	getPkmGender(struct s_pkm *);
