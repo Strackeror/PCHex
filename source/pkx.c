@@ -149,6 +149,7 @@ s8 	setPkmForm(struct s_pkm *pkm, u8 form)
 {
   pkm->pkx.formFlags &= 0x7;
   pkm->pkx.formFlags ^= form << 3;
+  pkmRecalc(pkm);
   return 0;
 }
 
@@ -294,8 +295,10 @@ u8 	getPkmIV(u32 individualValues, u8 stat)
   return (individualValues >> (5 * stat)) & 0x1F;
 }
 
-u16 	calcPkmStat(u16 species, u8 IV, u8 EV, u8 nature, u8 level, u8 stat)
+u16 	calcPkmStat(u16 species, u8 IV, u8 EV, u8 nature, u8 level, u8 stat, u8 form)
 {
+  if (form && form <= pkData.pkmData[species][0xC])
+    species = 721 + pkData.pkmData[species][0xD] + form - 1;
   u8 	baseStat = pkData.pkmData[species][stat];
   u8 	mult = 10;
   u16 	final;
@@ -320,7 +323,8 @@ s8 	pkmRecalc(struct s_pkm *pkm)
   pkm->level = calcPkmLevel(pkm->pkx.species, pkm->pkx.expPoints);
   for (int i = 0; i < 6; i++)
     pkm->stat[i] = calcPkmStat(pkm->pkx.species, getPkmIV(pkm->pkx.individualValues, i),
-			      pkm->pkx.effortValues[i], pkm->pkx.nature, pkm->level, i);
+			      pkm->pkx.effortValues[i], pkm->pkx.nature, pkm->level, i,
+			      pkm->pkx.formFlags >> 3);
   pkm->isShiny = isShiny(pkm);
   pkm->gender = getPkmGender(pkm);
   return 0;

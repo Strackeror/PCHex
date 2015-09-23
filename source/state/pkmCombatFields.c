@@ -116,6 +116,7 @@ void 	pkmComMove(t_stinf *state, u8 move)
 	state->pkm.pkx.relearnMoves[move] = target;
       else
 	state->pkm.pkx.moves[move] = target;
+      state->modded = 1;
     }
     state->inSel = 0;
   }

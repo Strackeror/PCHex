@@ -10,6 +10,7 @@ void 	pkmGenSpecies(t_stinf *state)
     if (target < 0)
       return;
     setPkmSpecies(&state->pkm, target);
+    state->modded = 1;
   }
 }
 
@@ -29,7 +30,10 @@ void 	pkmGenForm(t_stinf *state)
   if (form > pkData.pkmData[state->pkm.pkx.species][0xC])
     form = pkData.pkmData[state->pkm.pkx.species][0xC];
   if (form != state->pkm.pkx.formFlags >> 3)
+  {
     setPkmForm(&state->pkm, form);
+    state->modded = 1;
+  }
 }
 
 void 	pkmGenNickname(t_stinf *state)
@@ -203,6 +207,7 @@ void 	pkmGenHeldItem(t_stinf *state)
     if (target < 0)
       return;
     state->pkm.pkx.item = target;
+    state->modded = 1;
   }
 }
 
@@ -215,6 +220,7 @@ void 	pkmGenPokeball(t_stinf *state)
     if (target < 0)
       return;
     state->pkm.pkx.ballType = target;
+    state->modded = 1;
   }
 }
 
@@ -239,5 +245,6 @@ void 	pkmGenInputField(t_stinf *state)
     case 16: pkmGenGender(state); break;
     case 17: pkmGenPKRSStrain(state); break;
     case 18: pkmGenPKRSLeft(state); break;
+    case 19: pkmGenForm(state); break;
   }
 }

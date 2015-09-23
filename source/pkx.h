@@ -102,7 +102,7 @@ struct 	__attribute__((__packed__)) s_pkx
 
 struct s_data
 {
-  u8 	pkmData[722][14];
+  u8 	pkmData[826][14];
   u8	abilities[192][15];
   u8 	moves[622][17];
   u8 	species[722][12];
