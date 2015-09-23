@@ -58,6 +58,50 @@ Result saveFile(char *path, void *src, u64 size, FS_archive *archive, Handle *fs
   ret = FSFILE_Write(fileHandle, bytesWritten, 0, src, size, 0);
 
   FSFILE_Close(fileHandle);
+
+  return ret;
+}
+
+Result FSUSER_ControlArchive(Handle handle, FS_archive archive)
+{
+  u32* cmdbuf=getThreadCommandBuffer();
+
+  u32 b1 = 0, b2 = 0;
+
+  cmdbuf[0]=0x080d0144;
+  cmdbuf[1]=archive.handleLow;
+  cmdbuf[2]=archive.handleHigh;
+  cmdbuf[3]=0x0;
+  cmdbuf[4]=0x1; //buffer1 size
+  cmdbuf[5]=0x1; //buffer1 size
+  cmdbuf[6]=0x1a;
+  cmdbuf[7]=(u32)&b1;
+  cmdbuf[8]=0x1c;
+  cmdbuf[9]=(u32)&b2;
+
+  Result ret=0;
+  if((ret=svcSendSyncRequest(handle)))return ret;
+
+  return cmdbuf[1];
+}
+
+Result saveSFile(char *path, void *src, u64 size, FS_archive *archive, Handle *fsHandle, u32 *bytesWritten)
+{
+  if (!path || !src || !archive) return -1;
+
+  Result ret;
+  Handle fileHandle;
+
+  ret = FSUSER_OpenFile(fsHandle, &fileHandle, *archive, FS_makePath(PATH_CHAR, path), FS_OPEN_WRITE | FS_OPEN_CREATE, 0);
+  if (ret) return ret;
+
+  ret = FSFILE_Write(fileHandle, bytesWritten, 0, src, size, 0);
+  if (ret) return ret;
+
+  FSFILE_Close(fileHandle);
+  if (ret) return ret;
+
+  ret = FSUSER_ControlArchive(*fsHandle, *archive);
   return ret;
 }
 

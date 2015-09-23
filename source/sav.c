@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <time.h>
 #include <3ds.h>
 #include "pchex.h"
 
@@ -78,20 +79,36 @@ s32 	rewriteSaveCHK(u8 *save, u8 game)
   return (0);
 }
 
-s32 	exportSave(u8 *save, u8 game, Handle *sdHandle, FS_archive *sdArchive)
+s32 	backupSave(u8 *save, u8 game, Handle *fshdl, FS_archive *fsarch)
 {
-  char 	path[] = "/3ds/PCHex/main";
+  char 	dir[] = "/3ds/PCHex/";
+  char 	path[100];
+  u32 	len = game ? 0x76000 : 0x65600;
+  u32 	bytesWritten;
+  s32 	ret;
+
+  printf("Backing save up...");
+  sprintf(path, "%smain_%d", dir,(int) time(NULL));
+  ret = saveFile(path, save, len, fsarch, fshdl, &bytesWritten); //actually write the file
+  if (ret) return ret;
+  printf(" OK\n");
+  printf("backed save up to %s\n", path);
+  return 0;
+}
+
+s32 	exportSave(u8 *save, u8 game, Handle *fshdl, FS_archive *fsarch)
+{
+  char 	path[] = "/main";
   u32 	len = game ? 0x76000 : 0x65600;
   u32 	bytesWritten;
   s32 	ret;
 
   printf("Exporting save...");
-  deleteFile(path, sdHandle, sdArchive); //delete the old file, otherwise problems
   rewriteSaveCHK(save, game); //rewrite checksum, necessary or the save is considered corrupted
-  ret = saveFile(path, save, len, sdArchive, sdHandle, &bytesWritten); //actually write the file
+  deleteFile(path, fshdl, fsarch);
+  ret = saveSFile(path, save, len, fsarch, fshdl, &bytesWritten); //actually write the file
   if (ret) return ret;
   printf(" OK\n");
-  printf("exported save to %s\n", path);
   return 0;
 }
 

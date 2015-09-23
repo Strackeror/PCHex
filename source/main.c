@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include <3ds.h>
 
 #include "pchex.h"
@@ -100,7 +101,7 @@ int 	main()
   gfxInitDefault(); 
   consoleInit(GFX_BOTTOM, &bot);
   consoleInit(GFX_TOP, &top);
-  srand(svcGetSystemTick()); //Seeding rand to generate PIDs
+  srand(time(NULL)); //Seeding rand to generate PIDs
 
   //Filesystem init
   printf("Init Filesystem...\n");
@@ -123,11 +124,17 @@ int 	main()
     game = loadSave(save, &saveHandle, &saveArchive);
   s32 ret = 0;
 
+  if (backupSave(save, game, &sdHandle, &sdArchive))
+  {
+    printf("Backup failed, exiting");
+    goto end;
+  }
+
   if (game >= 0)
     ret = startLoop(save, game, &top, &bot); //main loop
   consoleSelect(&top);
   if (ret)
-    exportSave(save, game, &sdHandle, &sdArchive);
+    exportSave(save, game, &saveHandle, &saveArchive);
 
   end:
   //Exit stuff
