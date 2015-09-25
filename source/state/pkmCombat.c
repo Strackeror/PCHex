@@ -9,7 +9,7 @@
  * Combat tab state
  */
 
-char helpstringsCom[20][3][50] = {
+char helpstringsCom[30][3][50] = {
   { "Up/Down/Left/Right : Choose field",
     "A : Select field ",
     "Start : Back" },
@@ -26,7 +26,14 @@ char helpstringsCom[20][3][50] = {
   {"X : +1","Up/Down : +/- 4 | Left/Right : Min/Max","B : Leave field"},
   {"","Up/Down : +/- 1 | Left/Right : Min/Max","B : Leave field"},
   {"X : +1","Up/Down : +/- 4 | Left/Right : Min/Max","B : Leave field"},
-  {"","","B : Leave field"},
+  {"","A : Choose Move","B : Leave field"},
+  {"","A : Choose Move","B : Leave field"},
+  {"","A : Choose Move","B : Leave field"},
+  {"","A : Choose Move","B : Leave field"},
+  {"","A : Choose Move","B : Leave field"},
+  {"","A : Choose Move","B : Leave field"},
+  {"","A : Choose Move","B : Leave field"},
+  {"","A : Choose Move","B : Leave field"},
 };
 
 void 	pkmCombatHelp(t_stinf *state)

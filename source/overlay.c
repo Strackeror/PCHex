@@ -48,11 +48,14 @@ void 	printEditable(struct s_overlay *over)
   printf("\x1B[1;1H");
   printf("%s", over->title);
 
-  printf("\x1B[2;%dH^", over->offs + 1);
+  if (over->dataIndex < 0)
+    printf("\x1B[2;%dH^", over->offs + 1);
   printf("\x1B[3;1H%s", over->dst);
-  printf("\x1B[2m%c\x1B[0m", over->list[over->index]);
-
-  printf("\x1B[4;%dHv", over->offs + 1);
+  if (over->dataIndex < 0)
+  {
+    printf("\x1B[2m%c\x1B[0m", over->list[over->index]);
+    printf("\x1B[4;%dHv", over->offs + 1);
+  }
 
   for (int i = 0; i < 10; i++)
   {
@@ -91,14 +94,15 @@ s8	inputOverlay(struct s_overlay *over)
   {
     if (over->offs > 0)
       over->dst[--over->offs] = 0;
+    else
+      return -1;
     return 1;
   }
   if (kPressed & KEY_START)
   {
+   drawBox(&over->win, 28, 18);
    if (over->data && over->foundIndex[0] >= 0)
      over->dataIndex = 0;
-   else
-     return -1;
   }
   if (kPressed & KEY_SELECT)
     return -1;
@@ -211,6 +215,7 @@ s16	overlayGetpkm()
   over.datacount = 722;
   over.foundIndex[0] = -1;
   memcpy(&over.win, consoleGetDefault(), sizeof(PrintConsole));
+  doSearch(&over);
   launchOverlay(&over);
   if (over.dataIndex < 0)
     return -1;
@@ -234,6 +239,7 @@ s16	overlayGetMove()
   over.datacount = 622;
   over.foundIndex[0] = -1;
   memcpy(&over.win, consoleGetDefault(), sizeof(PrintConsole));
+  doSearch(&over);
   launchOverlay(&over);
   if (over.dataIndex < 0)
     return -1;
@@ -257,6 +263,7 @@ s16	overlayGetAbility()
   over.datacount = 192;
   over.foundIndex[0] = -1;
   memcpy(&over.win, consoleGetDefault(), sizeof(PrintConsole));
+  doSearch(&over);
   launchOverlay(&over);
   if (over.dataIndex < 0)
     return -1;
@@ -280,6 +287,7 @@ s16	overlayGetItems()
   over.datacount = 775;
   over.foundIndex[0] = -1;
   memcpy(&over.win, consoleGetDefault(), sizeof(PrintConsole));
+  doSearch(&over);
   launchOverlay(&over);
   if (over.dataIndex < 0)
     return -1;
@@ -303,6 +311,7 @@ s16	overlayGetBalls()
   over.datacount = 26;
   over.foundIndex[0] = -1;
   memcpy(&over.win, consoleGetDefault(), sizeof(PrintConsole));
+  doSearch(&over);
   launchOverlay(&over);
   if (over.dataIndex < 0)
     return -1;

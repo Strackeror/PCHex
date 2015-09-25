@@ -208,6 +208,7 @@ void 	pkmGenHeldItem(t_stinf *state)
       return;
     state->pkm.pkx.item = target;
     state->modded = 1;
+    state->inSel = 0;
   }
 }
 
@@ -221,6 +222,7 @@ void 	pkmGenPokeball(t_stinf *state)
       return;
     state->pkm.pkx.ballType = target;
     state->modded = 1;
+    state->inSel = 0;
   }
 }
 

@@ -28,11 +28,12 @@ char helpstringsGen[20][3][50] = {
   {"","","B : Leave field"},
   {"","","B : Leave field"},
   {"","","B : Leave field"},
-  {"","","B : Leave field"},
-  {"","","B : Leave field"},
+  {"","A : Choose Item","B : Leave field"},
+  {"","A : Choose Item","B : Leave field"},
   {"","X : Switch gender","B : Leave field"},
   {"0 : Not Infected","Up/Down : Add/Substract","B : Leave field"},
   {"0 : Cured / Not Infected","Up/Down : Add/Substract","B : Leave field"},
+  {"","Up/Down : Add/Substract","B : Leave field"},
 };
 
 void 	pkmGeneralInit(t_stinf *state)
