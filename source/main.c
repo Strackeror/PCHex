@@ -124,14 +124,16 @@ int 	main()
     game = loadSave(save, &saveHandle, &saveArchive);
   s32 ret = 0;
 
+  if (game < 0)
+    goto end;
+
   if (backupSave(save, game, &sdHandle, &sdArchive))
   {
     printf("Backup failed, exiting");
     goto end;
   }
 
-  if (game >= 0)
-    ret = startLoop(save, game, &top, &bot); //main loop
+  ret = startLoop(save, game, &top, &bot); //main loop
   consoleSelect(&top);
   if (ret)
     exportSave(save, game, &saveHandle, &saveArchive);
