@@ -4,3 +4,4 @@ build/
 .ycm*
 *.elf
 *.swp
+export/
