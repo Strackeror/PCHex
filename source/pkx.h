@@ -108,6 +108,7 @@ struct s_data
   u8 	species[722][12];
   u8 	items[775][17];
   u8 	balls[26][13];
+  u8 	natures[25][8];
 } pkData;
 
 struct s_pkm

@@ -11,6 +11,7 @@ void 	pkmGenSpecies(t_stinf *state)
       return;
     setPkmSpecies(&state->pkm, target);
     state->modded = 1;
+    state->inSel = 0;
   }
 }
 

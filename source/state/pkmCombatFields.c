@@ -5,12 +5,54 @@
 
 #include "state.h"
 
+void 	pkmComAbility(t_stinf *state)
+{
+  if (dirInputField(state, 0, 22, 0, 0)) return;
+
+  u32	kPressed = state->kPressed;
+  s8	abilNum = state->pkm.pkx.abilityNum;
+  if (kPressed & KEY_UP)
+  {
+    if (abilNum == 2)
+      abilNum = 4;
+    else if (abilNum < 4)
+      abilNum++;
+  }
+  if (kPressed & KEY_DOWN)
+  {
+    if (abilNum == 4)
+      abilNum = 2;
+    else if (abilNum > 0)
+      abilNum--;
+  }
+  if (abilNum != state->pkm.pkx.abilityNum)
+  {
+    setPkmAbilityNum(&state->pkm, abilNum);
+    state->modded = 1;
+  }
+}
+
+void 	pkmComNature(t_stinf *state)
+{
+  if (dirInputField(state, 1, 2, 0, 0)) return;
+  if (state->kPressed & KEY_A)
+  {
+    s16	target = overlayGetNature();
+    if (target >= 0 && target != state->pkm.pkx.nature)
+    {
+      state->pkm.pkx.nature = target;
+      state->modded = 1;
+    }
+    state->inSel = 0;
+  }
+}
+
 void 	pkmComStatIV(t_stinf *state, u8 stat)
 {
-  s8 	up = -2;
+  s8 	up = stat * 2;
   if (stat == 0)
-    up = -1;
-  if (stdInputField(state, up, 2, 0, 1)) return;
+    up = 22;
+  if (dirInputField(state, up, 4 + stat * 2, 0, 3 + stat * 2)) return;
 
   u32 	kPressed = state->kPressed;
   s8 	IV = getPkmIV(state->pkm.pkx.individualValues, stat);
@@ -37,7 +79,6 @@ void 	pkmComStatIV(t_stinf *state, u8 stat)
 void 	pkmComStatEV(t_stinf *state, u8 stat)
 {
   s8	down = 2;
-
   if (stat == 5)
     down = 1;
   if (stdInputField(state, -2, down, -1, 0)) return;
@@ -67,32 +108,6 @@ void 	pkmComStatEV(t_stinf *state, u8 stat)
   }
 }
 
-void 	pkmComAbility(t_stinf *state)
-{
-  if (stdInputField(state, 0, 1, 0, 0)) return;
-
-  u32	kPressed = state->kPressed;
-  s8	abilNum = state->pkm.pkx.abilityNum;
-  if (kPressed & KEY_UP)
-  {
-    if (abilNum == 2)
-      abilNum = 4;
-    else if (abilNum < 4)
-      abilNum++;
-  }
-  if (kPressed & KEY_DOWN)
-  {
-    if (abilNum == 4)
-      abilNum = 2;
-    else if (abilNum > 0)
-      abilNum--;
-  }
-  if (abilNum != state->pkm.pkx.abilityNum)
-  {
-    setPkmAbilityNum(&state->pkm, abilNum);
-    state->modded = 1;
-  }
-}
 
 void 	pkmComMove(t_stinf *state, u8 move)
 {
@@ -139,6 +154,6 @@ void 	pkmComInputField(t_stinf *state)
   case 1:
     pkmComAbility(state); break;
   case 22:
-    stdInputField(state, -1, 0, 0, 0); break;
+    pkmComNature(state); break;
  }
 }

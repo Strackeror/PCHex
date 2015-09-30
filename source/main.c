@@ -72,6 +72,12 @@ s8 	loadData(Handle *sdHandle, FS_archive *sdArchive)
   if (ret) { printf("loading failed : error code %ld\n", ret); return ret; }
   loadLines(tmp, pkData.balls[0], 13, bytesRead);
   printf(" OK\n");
+
+  printf("Loading nature names...");
+  ret = loadFile("/3ds/PCHex/data/text/text_Natures_en.txt", tmp, sdArchive, sdHandle, 12000, &bytesRead);
+  if (ret) { printf("loading failed : error code %ld\n", ret); return ret; }
+  loadLines(tmp, pkData.natures[0], 8, bytesRead);
+  printf(" OK\n");
   return 0;
 }
 
