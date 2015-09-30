@@ -63,9 +63,19 @@ void 	printEditable(struct s_overlay *over)
       break;
     if (over->dataIndex == i)
       printf("\x1B[7m");
-    printf("\x1B[%d;1H%s", i + 6, over->data + over->foundIndex[i] * over->entrylen);
+    printf("\x1B[%d;1H%s", i + 5, over->data + over->foundIndex[i] * over->entrylen);
     printf("\x1B[0m");
   }
+  printf("\x1B[15;1H\x1B[2m");
+  if (over->dataIndex < 0)
+  {
+    printf("U/D:Change  Start:List\n");
+    printf("\x1B[16;1HA:Add char  B:Rem Char");
+  } else {
+    printf("U/D:Change  A:Choose\n");
+    printf("\x1B[16;1HB:Back");
+  }
+  printf("\x1B[0m");
 }
 
 s8	inputOverlay(struct s_overlay *over)
