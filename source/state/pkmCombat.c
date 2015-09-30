@@ -99,10 +99,14 @@ void 	pkmCombatDisplay(t_stinf *state)
   selectColor(22, ist, sel);
   printf("Nature : %8s\n", pkData.natures[pkx->nature]);
 
+  int 	EVTot = 0;
   for (int i = 0; i < 6; i++)
+  {
     statField(state, (i + 1) * 2, i);
-
-  printf("\n");
+    EVTot += pkx->effortValues[i];
+  }
+  resetColor();
+  printf("%-20sEV Total:%-3d\n", "", EVTot);
 
   for (int i = 0; i < 8; i++)
     moveField(state, 14 + i, i);
