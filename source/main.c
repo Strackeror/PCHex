@@ -96,63 +96,63 @@ void 	waitKey(u32 keyWait)
   } 
 }
 
-int 	main()
+int 	pchexinit(struct s_pchex *pch)
 {
-  u8 	*save = NULL;
-  s32	fs;
-  PrintConsole 	top, bot;
-  Handle sdHandle, saveHandle;
-  FS_archive sdArchive, saveArchive;
-  //General Init Stuff
-  gfxInitDefault(); 
-  consoleInit(GFX_BOTTOM, &bot);
-  consoleInit(GFX_TOP, &top);
-  srand(time(NULL)); //Seeding rand to generate PIDs
+  int 	fs;
 
-  //Filesystem init
+  //General Init
+  srand(time(NULL));
+  gfxInitDefault();
+  consoleInit(GFX_BOTTOM, &pch->bot);
+  consoleInit(GFX_TOP, &pch->top);
+
+  //Filesystem Init
   printf("Init Filesystem...\n");
-  fs = filesysInit(&sdHandle, &saveHandle, &sdArchive, &saveArchive);
+  fs = filesysInit(&pch->sd.handle, &pch->sav.handle, &pch->sd.arch, &pch->sav.arch);
   if (fs)
     printf("Init FS Failed\n");
   else
     printf("Init FS OK\n");
 
-  //General Data loading
-  if (loadData(&sdHandle, &sdArchive))
-    goto end;
+  //Load Pokemon Data
+  if (loadData(&pch->sd.handle, &pch->sd.arch))
+    return -1;
 
   //save loading, save is loaded into the array 'save'
-  save = (u8 *) malloc(0xEB000);
-  s8 game;
-  if (fs)
-    game = loadSave(save, &sdHandle, &sdArchive);
-  else
-    game = loadSave(save, &saveHandle, &saveArchive);
-  s32 ret = 0;
+  pch->save = malloc(0xEB000);
+  pch->game = loadSave(pch->save, &pch->sav.handle, &pch->sav.arch);
+  if (pch->game < 0)
+    pch->game = loadSave(pch->save, &pch->sd.handle, &pch->sd.arch);
+  if (pch->game < 0)
+    return -1;
 
-  if (game < 0)
-    goto end;
-
-  if (backupSave(save, game, &sdHandle, &sdArchive))
+  if (backupSave(pch->save, pch->game, &pch->sd.handle, &pch->sd.arch))
   {
-    printf("Backup failed, exiting");
-    goto end;
+    printf("Backup Failed, Exiting\n");
+    return -1;
   }
+  return 0;
+}
 
-  ret = startLoop(save, game, &top, &bot); //main loop
-  consoleSelect(&top);
-  if (ret)
-    exportSave(save, game, &saveHandle, &saveArchive);
-
-  end:
-  //Exit stuff
-  consoleSelect(&bot);
+int 	pchexexit(struct s_pchex *pch)
+{
+  consoleSelect(&pch->bot);
   consoleClear();
   printf("\x1B[15;2H");
   printf("Program ended, press A to finish\n");
   waitKey(KEY_A);
-  free(save);
+  free(pch->save);
   gfxExit();
-  filesysExit(&sdHandle, &saveHandle, &sdArchive, &saveArchive);
-  return 0;
+  filesysExit(&pch->sd.handle, &pch->sav.handle, &pch->sd.arch, &pch->sav.arch);
+  return (0);
+}
+
+int 	main()
+{
+  struct s_pchex pch;
+  
+  if (pchexinit(&pch) >= 0)
+    startLoop(&pch); //main loop
+    //exportSave(save, game, &saveHandle, &saveArchive);
+  return pchexexit(&pch);
 }

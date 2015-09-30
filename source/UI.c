@@ -10,9 +10,9 @@
 s32	loadPokemon(t_stinf *state, u16 slot, u8 *dest)
 {
   u8 	tmp[232];
-  u32 	offs = state->game ? 0x33000 : 0x22600;
+  u32 	offs = state->pch->game ? 0x33000 : 0x22600;
 
-  memcpy(tmp, state->save + offs + 232 * slot, 232);
+  memcpy(tmp, state->pch->save + offs + 232 * slot, 232);
   decryptPokemon(tmp, dest);
   return 0;
 }
@@ -31,11 +31,11 @@ s32 	rewritechk(u8 *dec)
 s32	savePokemon(t_stinf *state, u16 slot, u8 *src)
 {
   u8 	enc[232];
-  u32 	offs = state->game ? 0x33000 : 0x22600;
+  u32 	offs = state->pch->game ? 0x33000 : 0x22600;
 
   rewritechk(src); //rewrite the pokemon's checksum, otherwise bad egg
   encryptPokemon(src, enc);
-  memcpy(state->save + offs + 232 * slot, enc, 232);
+  memcpy(state->pch->save + offs + 232 * slot, enc, 232);
   return 0;
 }
 
@@ -51,15 +51,12 @@ s32	switchState(t_stinf *state, struct s_UIState newst)
 //initf : 'init' function
 //dispf : 'display' function
 //inputf : 'input' function
-s32 	startLoop(u8 *save, u8 game, PrintConsole *top, PrintConsole *bot)
+s32 	startLoop(struct s_pchex *pch)
 {
   t_stinf state;
 
+  state.pch = pch;
   //Default state settings
-  state.save = save;
-  state.console[0] = top;
-  state.console[1] = bot;
-  state.game = game;
   state.pkmSlot = 0;
   state.cont = 1;
   state.inState = 1;

@@ -4,6 +4,23 @@
 #include <3ds.h>
 #include "pkx.h"
 
+struct 		s_3fs
+{
+  Handle  	handle;
+  FS_archive 	arch;
+};
+
+struct s_pchex
+{
+  PrintConsole 	top;
+  PrintConsole 	bot;
+  struct s_3fs  sav;
+  struct s_3fs  sd;
+  s8 		game;
+  u8 		*save;
+};
+
+
 struct s_stateInfo;
 
 struct s_UIState
@@ -17,13 +34,11 @@ struct s_UIState
 struct s_stateInfo
 {
   u32 			kPressed; //stores what keys are pressed
-  PrintConsole 		*console[2]; //consoles - 0 : top 1 : bottom
+  struct s_pchex	*pch;
 
   struct s_pkm 		pkm; //the currently edited pokemon
   struct s_pkm 		cpy; //the pokemon in the clipboard
   s16 			pkmSlot; //the current box slot which is edited
-  u8 			game; //1 is OR/AS, 0 if X/Y
-  u8 			*save; //savefile array
 
   struct s_UIState 	curState; //current state
   s8 			inState; //ID of what is selected
@@ -54,7 +69,7 @@ s32	loadPokemon(t_stinf *state, u16 slot, u8 *dest);
 s32	savePokemon(t_stinf *state, u16 slot, u8 *src);
 u32 	getCHKOffset(u8 game, u8 type, u8 index);
 s32 	switchState(t_stinf *state, struct s_UIState newst);
-s32 	startLoop(u8 *, u8, PrintConsole *, PrintConsole *);
+s32 	startLoop(struct s_pchex *);
 
 s16 	overlayGetpkm();
 s16 	overlayGetMove();

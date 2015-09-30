@@ -17,7 +17,7 @@ void 	reloadPokemon(t_stinf *state)
 
 void 	pkmSelectInit(t_stinf *state)
 {
-  consoleSelect(state->console[1]);
+  consoleSelect(&state->pch->bot);
   consoleClear();
 
   if (state->inState)
@@ -59,7 +59,9 @@ void 	pkmSelectInput(t_stinf *state)
   }
   if (kPressed & KEY_SELECT)
   {
-    state->cont = -1;
+    consoleSelect(&state->pch->top);
+    exportSave(state->pch->save, state->pch->game, &state->pch->sav.handle, &state->pch->sav.arch);
+    consoleSelect(&state->pch->bot);
     return;
   }
   if (kPressed & KEY_A)
