@@ -13,12 +13,8 @@ Copy the content of the "export" folder in your "homebrew" or "3ds" folder.
 # Use
 * Choose PCHex from the homebrew browser
 * Choose your Pokémon game as the target game
-* Choose the Pokémon from the box and slot selection screen
-* You are able to change some but not all of the values at the moment
-* Press Select to save the changes and Start to return
-* Press Start again to exit
-* Use CTRXplorer by d0k3 to move the "/3ds/PCHex/main" file to "/saveDataBackup/main"
-* Use Save Manager by profi200 to import the save to your game
+* Follow Instructions
+* Select to export your changes
 
 # Known Issues
 
